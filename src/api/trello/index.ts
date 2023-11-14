@@ -1,7 +1,6 @@
-const trelloController = require("./trelloController");
+import { getBoardData } from './trelloController';
 
-trelloController
-  .getBoardData()
+getBoardData()
   .then((data) => {
     console.log("Trello Board Data:", JSON.stringify(data, null, 2));
   })
