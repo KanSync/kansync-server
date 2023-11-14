@@ -14,6 +14,6 @@ export const HEADERS = {
   basicAuthHeader: (basicToken: string, email: string) => ({
     accept: "application/json",
     "Content-Type": "application/json; charset=UTF-8",
-    Authorization: `Basic ${email}:${basicToken}`,
+    Authorization: "Basic " + btoa(`${email}:${basicToken}`),
   }),
 };

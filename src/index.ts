@@ -3,8 +3,11 @@ import { API_OPS } from "./api/jira/APIOperations";
 import { HEADERS } from "./api/jira/header";
 let token = "";
 let email = "";
+let domainName = "iwouldliketotestthis";
+let projectKey = "KAN"
 
-console.log(callAPI(
-    API_OPS.getIssues("KAN"), 
-    HEADERS.basicAuthHeader(token, email), 
-    "GET"))
+callAPI(
+  domainName,
+  API_OPS.getIssues(projectKey),
+  HEADERS.basicAuthHeader(token, email)
+).then(result=>console.log(result));
