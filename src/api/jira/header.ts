@@ -5,15 +5,19 @@ export interface Header {
 }
 
 export const HEADERS = {
-  authHeader: (authToken: string) => ({
-    accept: "application/json",
-    "Content-Type": "application/json; charset=UTF-8",
-    Authorization: `Bearer ${authToken}`,
-  }),
+  authHeader: (authToken: string) => (
+    new Headers({
+      accept: "application/json",
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${authToken}`,
+    })
+  ),
 
-  basicAuthHeader: (basicToken: string, email: string) => ({
-    accept: "application/json",
-    "Content-Type": "application/json; charset=UTF-8",
-    Authorization: "Basic " + btoa(`${email}:${basicToken}`),
-  }),
+  basicAuthHeader: (basicToken: string, email: string) => (
+    new Headers({
+      accept: "application/json",
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: "Basic " + btoa(`${email}:${basicToken}`),
+    })
+  ),
 };

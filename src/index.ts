@@ -3,8 +3,8 @@ import { API_OPS } from "./api/jira/APIOperations";
 import { HEADERS } from "./api/jira/header";
 let token = "";
 let email = "";
-let domainName = "iwouldliketotestthis";
-let projectKey = "KAN"
+let domainName = "";
+let projectKey = "";
 
 callAPI(
   domainName,

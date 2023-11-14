@@ -7,8 +7,8 @@ const domainURL = (domainName: string) => `https://${domainName}.atlassian.net`;
 export function callAPI(
   domainName: string,
   operation: Operations,
-  headers: any,
-  body?: any
+  headers: Headers,
+  body?: string
 ) {
   let url = domainURL(domainName) + operation.endpoint;
 
