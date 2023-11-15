@@ -1,5 +1,3 @@
-import { HEADERS } from "./header";
-
 export interface Operations {
   endpoint: string,
   method: string

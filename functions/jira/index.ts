@@ -17,6 +17,7 @@ export default async (req: Request, res: Response) => {
     return
   }
 
+  // These are parsed from queries and can therefore be a string or undefined. We have already checked that they are not undefined which is why we set it to string.
   token = token as string;
   email = email as string;
   domainName = domainName as string;

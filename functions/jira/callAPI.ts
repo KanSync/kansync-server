@@ -1,4 +1,3 @@
-// import { Payload } from "./payload";
 import { Operations } from "./APIOperations";
 
 const domainURL = (domainName: string) => `https://${domainName}.atlassian.net`;
@@ -36,7 +35,7 @@ export function callAPI(
       if (!response.ok) {
         throw new Error(response.statusText);
       }
-      return response.json() as Promise<{ data: any }>;
+      return response.json();
     })
     .then((data) => {
       return data;
