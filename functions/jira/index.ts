@@ -9,7 +9,7 @@ export default (req: Request, res: Response) => {
   let domainName = req.query.name;
   let projectKey = req.query.projectKey;
 
-  if (token === undefined && email === undefined && domainName === undefined && projectKey === undefined){
+  if (token === undefined || email === undefined || domainName === undefined || projectKey === undefined){
     res.status(400).send(`Missing token, email, domain name or project key.`)
     return
   }
