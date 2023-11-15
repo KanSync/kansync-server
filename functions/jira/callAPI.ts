@@ -22,7 +22,6 @@ export function callAPI(
 ): Promise<{ data: any }
   | {
     response: any;
-    error: any;
   }> {
   let url = domainURL(domainName) + operation.endpoint;
 
@@ -33,7 +32,7 @@ export function callAPI(
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error(response.statusText);
+        throw response;
       }
       return response.json();
     })
@@ -42,8 +41,7 @@ export function callAPI(
     })
     .catch((error) => {
       return {
-        response: null,
-        error,
+        response: error.statusText,
       };
     });
 
