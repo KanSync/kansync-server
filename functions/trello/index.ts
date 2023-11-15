@@ -1,5 +1,6 @@
 import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
+import { Request, Response } from "express";
 
 interface Member {
   id: string;
@@ -14,6 +15,26 @@ interface Card {
 interface List {
   cards: Card[];
 }
+export default async (req: Request, res: Response) => {
+  const boardId = req.query.boardId as string;
+  const apiKey = req.query.apiKey as string;
+  const apiToken = req.query.apiToken as string;
+
+  if (!boardId || !apiKey || !apiToken) {
+    res
+      .status(400)
+      .send(`Missing required parameters: boardId, apiKey, or apiToken.`);
+    return;
+  }
+
+  try {
+    const boardData = await getBoardData(boardId, apiKey, apiToken);
+    res.status(200).send(boardData);
+  } catch (error) {
+    console.error("Error fetching board data:", error);
+    res.status(500).send(`Internal Server Error: ${error.message}`);
+  }
+};
 
 export async function getBoardData(
   boardId: string,
