@@ -1,8 +1,7 @@
-
 export interface Operations {
-  url: string,
-  method: string,
-  qs: { [key: string]: string | boolean }
+  url: string;
+  method: string;
+  qs: { [key: string]: string | boolean };
 }
 
 export const API_OPS = {
@@ -12,7 +11,7 @@ export const API_OPS = {
     qs: {
       cards: "open",
       card_fields: "name,idMembers,desc,due,labels",
-      fields: "name"
+      fields: "name",
     },
   }),
 
@@ -20,7 +19,7 @@ export const API_OPS = {
     url: `https://api.trello.com/1/boards/${boardId}`,
     method: "GET",
     qs: {
-      fields: "name"
+      fields: "name",
     },
   }),
 
@@ -30,4 +29,3 @@ export const API_OPS = {
     qs: {},
   }),
 };
-

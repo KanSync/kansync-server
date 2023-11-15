@@ -1,5 +1,5 @@
 import { Operations } from "./APIOperations";
-import rp from 'request-promise';
+import rp from "request-promise";
 
 export function callAPI(
   operation: Operations,
@@ -22,8 +22,9 @@ export function callAPI(
       return response;
     })
     .catch((error) => {
-      console.error("Error in callAPI:", error);
-      throw error;
+      console.error(`Error in callAPI for ${operation.url}:`, error);
+      throw new Error(
+        `Error in callAPI for ${operation.url}: ${error.message}`
+      );
     });
 }
-
