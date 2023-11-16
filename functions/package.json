@@ -22,5 +22,16 @@
     "dotenv": "^16.3.1",
     "octokit": "^3.1.1",
     "request-promise": "^4.2.6"
+  },
+  "prettier": {
+    "bracketSpacing": true,
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "endOfLine": "auto",
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
   }
 }
