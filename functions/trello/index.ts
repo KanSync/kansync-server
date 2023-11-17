@@ -12,6 +12,7 @@ interface Card {
   idMembers: string[];
   memberNames?: string[];
   createdDate?: Date;
+  assignedCount: number;
 }
 
 interface List {
@@ -39,20 +40,17 @@ export default async (req: Request, res: Response) => {
 };
 
 export async function getBoardData(
-  boardId: string,
-  apiKey: string,
-  apiToken: string
-): Promise<{ boardName: string; lists: List[] }> {
+    boardId: string,
+    apiKey: string,
+    apiToken: string
+): Promise<{ boardName: string; lists: List[]; totalCardCount: number }> {
   try {
     const boardName = await getBoardName(boardId, apiKey, apiToken);
-    const lists = await getListsFromBoard(boardId, apiKey, apiToken);
-    const listsWithMemberNames = await populateMemberNamesInLists(
-      lists,
-      boardId,
-      apiKey,
-      apiToken
-    );
-    return { boardName, lists: listsWithMemberNames };
+    let lists = await getListsFromBoard(boardId, apiKey, apiToken);
+    lists = await populateMemberNamesInLists(lists, boardId, apiKey, apiToken);
+    const totalCardCount = getTotalCardCount(lists);
+
+    return { boardName, lists, totalCardCount };
   } catch (error) {
     console.error("Error fetching board data:", error);
     throw error;
@@ -85,6 +83,10 @@ function getCardCreationDate(cardId: string): Date {
   return new Date(timestamp * 1000);
 }
 
+function getTotalCardCount(lists: List[]): number {
+  return lists.reduce((total, list) => total + list.cards.length, 0);
+}
+
 async function populateMemberNamesInLists(
   lists: List[],
   boardId: string,
@@ -98,6 +100,7 @@ async function populateMemberNamesInLists(
         (id) => memberNames[id] || "Unknown"
       );
       card.createdDate = getCardCreationDate(card.id);
+      card.assignedCount = card.idMembers.length;
     });
   });
   return lists;
