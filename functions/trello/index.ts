@@ -8,8 +8,10 @@ interface Member {
 }
 
 interface Card {
+  id: string;
   idMembers: string[];
   memberNames?: string[];
+  createdDate?: Date;
 }
 
 interface List {
@@ -78,6 +80,11 @@ async function getListsFromBoard(
   return await callAPI(API_OPS.getListsFromBoard(boardId), apiKey, apiToken);
 }
 
+function getCardCreationDate(cardId: string): Date {
+  const timestamp = parseInt(cardId.substring(0, 8), 16);
+  return new Date(timestamp * 1000);
+}
+
 async function populateMemberNamesInLists(
   lists: List[],
   boardId: string,
@@ -90,6 +97,7 @@ async function populateMemberNamesInLists(
       card.memberNames = card.idMembers.map(
         (id) => memberNames[id] || "Unknown"
       );
+      card.createdDate = getCardCreationDate(card.id);
     });
   });
   return lists;
