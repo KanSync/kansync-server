@@ -13,6 +13,7 @@ interface Card {
   memberNames?: string[];
   createdDate?: Date;
   assignedCount: number;
+  isClosed: boolean;
 }
 
 interface List {
@@ -101,6 +102,7 @@ async function populateMemberNamesInLists(
       );
       card.createdDate = getCardCreationDate(card.id);
       card.assignedCount = card.idMembers.length;
+      card.isClosed = card.isClosed;
     });
   });
   return lists;
