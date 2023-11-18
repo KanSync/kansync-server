@@ -41,9 +41,9 @@ export default async (req: Request, res: Response) => {
 };
 
 export async function getBoardData(
-    boardId: string,
-    apiKey: string,
-    apiToken: string
+  boardId: string,
+  apiKey: string,
+  apiToken: string
 ): Promise<{ boardName: string; lists: List[]; totalCardCount: number }> {
   try {
     const boardName = await getBoardName(boardId, apiKey, apiToken);
