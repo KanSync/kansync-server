@@ -10,7 +10,7 @@ export const API_OPS = {
     method: "GET",
     qs: {
       cards: "open",
-      card_fields: "name,idMembers,desc,due,labels",
+      card_fields: "name,idMembers,desc,due,labels,id,closed",
       fields: "name",
     },
   }),
