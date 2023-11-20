@@ -18,10 +18,13 @@
   "license": "ISC",
   "dependencies": {
     "@octokit/graphql": "^7.0.2",
-    "axios": "^1.6.1",
+    "axios": "^1.6.2",
+    "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
-    "request-promise": "^4.2.6",
-    "octokit": "^3.1.1"
+    "express": "^4.18.2",
+    "oauth": "^0.10.0",
+    "octokit": "^3.1.1",
+    "request-promise": "^4.2.6"
   },
   "prettier": {
     "bracketSpacing": true,
