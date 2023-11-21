@@ -3,6 +3,12 @@ export interface Member {
   fullName: string;
 }
 
+export interface Label {
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface Card {
   id: string;
   name: string;
@@ -14,6 +20,9 @@ export interface Card {
   assignedCount: number;
   isClosed: boolean;
   dateLastActivity: Date;
+  due?: Date;
+  labels: Label[];
+  projectID: string;
 }
 
 export interface List {
