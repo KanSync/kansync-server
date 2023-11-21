@@ -1,8 +1,8 @@
-interface Assignee {
+export interface Assignee {
   name: string;
 }
 
-interface UnifiedIssue {
+export interface IUnifiedIssue {
   title: string;
   assignees: Assignee[];
   author: Assignee;
@@ -15,5 +15,5 @@ interface UnifiedIssue {
   projectID: number;
   dueDate: Date;
   labels: string[];
-  dependencies?: UnifiedIssue[];
+  dependencies?: IUnifiedIssue[];
 }

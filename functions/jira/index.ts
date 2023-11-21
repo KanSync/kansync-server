@@ -2,6 +2,7 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { HEADERS } from "./header";
 import { Request, Response } from 'express'
+import { toUnified } from "./conversion"
 
 /**
  * Endpoint to get all issues for a Jira project
@@ -44,6 +45,9 @@ export default async (req: Request, res: Response) => {
     starting_issue += result.maxResults;
 
   } while ((result.startAt + result.maxResults) < result.total);
+
+  issues = issues.map(issue => toUnified(issue));
+
   res.status(200).send({ "num": issues.length, "issues": issues });
 }
 
