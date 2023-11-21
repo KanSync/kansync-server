@@ -87,10 +87,7 @@ async function populateMemberNamesInLists(
         (id) => memberNames[id] || "Unknown",
       );
       card.createdDate = getCardCreationDate(card.id);
-      card.category = list.name;
-      card.labels = card.labels;
-      card.projectID = boardId;
-      card.due = card.due ? new Date(card.due) : undefined;
+      //card.category = list.name;
       card.assignedCount = card.idMembers.length;
       card.isClosed = card.isClosed;
     });
@@ -113,6 +110,14 @@ async function getMemberNames(
     return acc;
   }, {});
 }
+
+getBoardData(BOARD_ID, API_KEY, API_TOKEN)
+  .then((data) => {
+    console.log("Board Data:", JSON.stringify(data, null, 2));
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
 
 async function fetchAndProcessTrelloData() {
   try {

@@ -7,25 +7,22 @@ export function convertTrelloDataToUnifiedIssues(
 ): IUnifiedIssue[] {
   let unifiedIssues: IUnifiedIssue[] = [];
 
-  /*
-   * Trello doesn't provide author, statusChangeTime nor dependencies.
-   */
   lists.forEach((list) => {
     list.cards.forEach((card) => {
       const unifiedIssue: IUnifiedIssue = {
         title: card.name || "Default Title",
         assignees: card.memberNames.map((name) => ({ name } as Assignee)),
-        author: { name: "Unknown" },
+        author: { name: "Unknown" }, // No author field in Trello
         body: card.desc,
-        category: card.category,
-        statusChangeTime: null,
+        category: card.category, // NOT WORKING ATM
+        statusChangeTime: new Date(),
         createdAt: card.createdDate,
-        comments: [],
+        comments: [], // Not fetched
         lastEditedAt: card.dateLastActivity,
-        projectID: null,
-        dueDate: card.due || null,
-        labels: card.labels.map(label => label.name),
-        dependencies: [],
+        projectID: 1, // TODO
+        dueDate: new Date(),
+        labels: [],
+        dependencies: [], // Trello doesn't have a direct equivalent
       };
       unifiedIssues.push(unifiedIssue);
     });
