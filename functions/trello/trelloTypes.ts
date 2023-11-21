@@ -1,4 +1,3 @@
-
 export interface Member {
   id: string;
   fullName: string;
@@ -14,8 +13,10 @@ export interface Card {
   createdDate?: Date;
   assignedCount: number;
   isClosed: boolean;
+  dateLastActivity: Date;
 }
 
 export interface List {
   cards: Card[];
+  name: string;
 }
