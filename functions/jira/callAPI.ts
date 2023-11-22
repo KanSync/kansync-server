@@ -9,7 +9,7 @@ const domainURL = (domainName: string) => `https://${domainName}.atlassian.net`;
  * @param operation - What HTTP method and Jira API endpoint to use
  * @param headers - Request headers
  * @param body - Optional Request body
- * @return response from the Jira API
+ * @returns response from the Jira API
  *
  * @example
  *    callAPI("iwanttotestthis", API_OPS.getIssues(projectKey), Headers.basicAuthHeader(token, email))
