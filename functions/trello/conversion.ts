@@ -15,7 +15,7 @@ export function convertTrelloDataToUnifiedIssues(
       const unifiedIssue: IUnifiedIssue = {
         title: card.name || "Default Title",
         assignees: card.memberNames.map((name) => ({ name } as Assignee)),
-        author: { name: "Unknown" },
+        author: { name: null },
         body: card.desc,
         category: card.category,
         statusChangeTime: null,
