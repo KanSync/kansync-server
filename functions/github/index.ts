@@ -3,6 +3,7 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { allowCors } from "../_utils/helpers";
 import { GET_PROJECT_CARDS } from "./schema/getProjectCards";
+import { toUnified } from "./conversion";
 
 const handler = async (req: Request, res: Response) => {
   if (!process.env.PERSONAL_ACCESS_TOKEN) {
@@ -26,7 +27,9 @@ const handler = async (req: Request, res: Response) => {
     method: "POST",
   }).then((response) => response.json());
 
-  res.status(200).send(result);
+  let issues = result.data.organization.projectV2.items.nodes.map(issue => toUnified(issue))
+
+  res.status(200).send(issues);
 };
 
 export default allowCors(handler);

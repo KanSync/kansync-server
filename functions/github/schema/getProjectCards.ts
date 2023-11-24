@@ -10,15 +10,27 @@ query GET_PROJECT_CARDS($login: String!) {
       }
       projectV2(number: 3) {
           title
+          id
           items(first: 10) {
               nodes {
+                status: fieldValueByName(name: "Status") {
+                    ... on ProjectV2ItemFieldSingleSelectValue {
+                      column: name
+                      updatedAt
+                    }
+                  }
                   id
+                  project {
+                    id
+                  }
                   content {
                       __typename
                       ... on Issue {
                           activeLockReason
-                          assignees {
-                              totalCount
+                          assignees(first: 10) {
+                              nodes {
+                                login
+                              }
                           }
                           author {
                               avatarUrl
@@ -36,7 +48,9 @@ query GET_PROJECT_CARDS($login: String!) {
                           closedAt
                           createdAt
                           comments(first: 10) {
-                              totalCount
+                              nodes {
+                                body
+                              }
                           }
                           createdViaEmail
                           databaseId
@@ -51,7 +65,9 @@ query GET_PROJECT_CARDS($login: String!) {
                           isPinned
                           isReadByViewer
                           labels(first: 10) {
-                              totalCount
+                              nodes {
+                                name
+                              }
                           }
                           lastEditedAt
                           locked

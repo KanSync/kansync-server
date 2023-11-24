@@ -17,7 +17,7 @@ export function toUnified(issue: any): IUnifiedIssue {
     createdAt: new Date(issue.fields.created),
     comments: issue.fields.comment.comments.map(comment => comment.body),
     lastEditedAt: new Date(issue.fields.updated),
-    projectID: issue.fields.project.id,
+    projectID: issue.fields.project.id, // TODO: Make sure this id is unique
     dueDate: issue.fields.duedate ? new Date(issue.fields.duedate) : null,
     labels: issue.fields.labels,
   }
