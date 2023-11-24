@@ -1,7 +1,7 @@
 import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
-import { convertTrelloDataToUnifiedIssues } from "./conversion";
+import { toUnifiedIssues } from "./conversion";
 
 import { List, Card, Member } from "./trelloTypes";
 
@@ -120,11 +120,15 @@ async function getMembersData(
   apiToken: string,
 ): Promise<List[]> {
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
-
+}
+const BOARD_ID = "61f3b37006b9e3800db0c59b";
+const API_KEY = "bf31f9e3d15bfed850a7d318116fdf7e";
+const API_TOKEN =
+  "ATTA5c65e0b5b12ee5fb4884662add6fcbd51231aa6e1a508e651ab0a4f8882a8c24E7E19C97";
 async function fetchAndProcessTrelloData() {
   try {
     const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
-    const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
+    const unifiedIssues = toUnifiedIssues(trelloData.lists);
     console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
   } catch (error) {
     console.error("Error:", error);

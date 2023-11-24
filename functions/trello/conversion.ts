@@ -2,7 +2,7 @@ import { IUnifiedIssue, Assignee } from "../common";
 
 import { List } from "./trelloTypes";
 
-export function convertTrelloDataToUnifiedIssues(
+export function toUnifiedIssues(
   lists: List[],
 ): IUnifiedIssue[] {
   let unifiedIssues: IUnifiedIssue[] = [];
@@ -15,7 +15,7 @@ export function convertTrelloDataToUnifiedIssues(
       const unifiedIssue: IUnifiedIssue = {
         title: card.name || "Default Title",
         assignees: card.memberNames.map((name) => ({ name } as Assignee)),
-        author: { name: "Unknown" },
+        author: { name: null },
         body: card.desc,
         category: card.category,
         statusChangeTime: null,
@@ -24,7 +24,7 @@ export function convertTrelloDataToUnifiedIssues(
         lastEditedAt: card.dateLastActivity,
         projectID: card.projectID,
         dueDate: card.due || null,
-        labels: card.labels.map(label => label.name),
+        labels: card.labels.map((label) => label.name),
         dependencies: [],
       };
       unifiedIssues.push(unifiedIssue);
