@@ -120,15 +120,16 @@ async function getMembersData(
   apiToken: string,
 ): Promise<List[]> {
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
-
-async function fetchAndProcessTrelloData() {
-  try {
-    const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
-    const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
-    console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
-  } catch (error) {
-    console.error("Error:", error);
-  }
 }
 
-fetchAndProcessTrelloData();
+  async function fetchAndProcessTrelloData() {
+    try {
+      const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
+      const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
+      console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  fetchAndProcessTrelloData();
