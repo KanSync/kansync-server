@@ -114,6 +114,13 @@ async function getMemberNames(
   }, {});
 }
 
+async function getMembersData(
+  username: string,
+  apiKey: string,
+  apiToken: string,
+): Promise<List[]> {
+  return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
+
 async function fetchAndProcessTrelloData() {
   try {
     const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);

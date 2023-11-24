@@ -28,4 +28,17 @@ export const API_OPS = {
     method: "GET",
     qs: {},
   }),
+
+  getMembersData: (username: string) => ({
+    url: `https://api.trello.com/1/members/${username}`,
+    method: "GET",
+    qs: {
+      fields: "id,username,url,idBoards,fullName",
+    },
+  }),
+  getMemberBoards: (user_id: string) => ({
+    url: `https://api.trello.com/1/members/${user_id}/boards`,
+    method: "GET",
+    qs: {},
+  }),
 };

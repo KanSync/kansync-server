@@ -22,7 +22,7 @@ export function convertTrelloDataToUnifiedIssues(
         createdAt: card.createdDate,
         comments: [],
         lastEditedAt: card.dateLastActivity,
-        projectID: null,
+        projectID: card.projectID,
         dueDate: card.due || null,
         labels: card.labels.map(label => label.name),
         dependencies: [],
