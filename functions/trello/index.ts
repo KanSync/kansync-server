@@ -1,24 +1,10 @@
 import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
+import { convertTrelloDataToUnifiedIssues } from "./conversion";
 
-interface Member {
-  id: string;
-  fullName: string;
-}
+import { List, Card, Member } from "./trelloTypes";
 
-interface Card {
-  id: string;
-  idMembers: string[];
-  memberNames?: string[];
-  createdDate?: Date;
-  assignedCount: number;
-  isClosed: boolean;
-}
-
-interface List {
-  cards: Card[];
-}
 export default async (req: Request, res: Response) => {
   const boardId = req.query.boardId as string;
   const apiKey = req.query.apiKey as string;
@@ -43,7 +29,7 @@ export default async (req: Request, res: Response) => {
 export async function getBoardData(
   boardId: string,
   apiKey: string,
-  apiToken: string
+  apiToken: string,
 ): Promise<{ boardName: string; lists: List[]; totalCardCount: number }> {
   try {
     const boardName = await getBoardName(boardId, apiKey, apiToken);
@@ -61,12 +47,12 @@ export async function getBoardData(
 async function getBoardName(
   boardId: string,
   apiKey: string,
-  apiToken: string
+  apiToken: string,
 ): Promise<string> {
   const boardDetails = await callAPI(
     API_OPS.getBoardDetails(boardId),
     apiKey,
-    apiToken
+    apiToken,
   );
   return boardDetails.name;
 }
@@ -74,7 +60,7 @@ async function getBoardName(
 async function getListsFromBoard(
   boardId: string,
   apiKey: string,
-  apiToken: string
+  apiToken: string,
 ): Promise<List[]> {
   return await callAPI(API_OPS.getListsFromBoard(boardId), apiKey, apiToken);
 }
@@ -92,15 +78,19 @@ async function populateMemberNamesInLists(
   lists: List[],
   boardId: string,
   apiKey: string,
-  apiToken: string
+  apiToken: string,
 ): Promise<List[]> {
   const memberNames = await getMemberNames(boardId, apiKey, apiToken);
   lists.forEach((list) => {
     list.cards.forEach((card) => {
       card.memberNames = card.idMembers.map(
-        (id) => memberNames[id] || "Unknown"
+        (id) => memberNames[id] || "Unknown",
       );
       card.createdDate = getCardCreationDate(card.id);
+      card.category = list.name;
+      card.labels = card.labels;
+      card.projectID = boardId;
+      card.due = card.due ? new Date(card.due) : undefined;
       card.assignedCount = card.idMembers.length;
       card.isClosed = card.isClosed;
     });
@@ -111,15 +101,35 @@ async function populateMemberNamesInLists(
 async function getMemberNames(
   boardId: string,
   apiKey: string,
-  apiToken: string
+  apiToken: string,
 ): Promise<{ [key: string]: string }> {
   const members: Member[] = await callAPI(
     API_OPS.getBoardMembers(boardId),
     apiKey,
-    apiToken
+    apiToken,
   );
   return members.reduce<{ [key: string]: string }>((acc, member) => {
     acc[member.id] = member.fullName;
     return acc;
   }, {});
 }
+
+async function getMembersData(
+  username: string,
+  apiKey: string,
+  apiToken: string,
+): Promise<List[]> {
+  return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
+}
+
+  async function fetchAndProcessTrelloData() {
+    try {
+      const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
+      const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
+      console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  fetchAndProcessTrelloData();
