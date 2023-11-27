@@ -6,7 +6,7 @@ import { Assignee, IUnifiedIssue } from "../common";
  * @param issue - GitHub issue
  * @returns GitHub issue in unified format
  */
-export function toUnified(issue: any): IUnifiedIssue {
+export function toUnified(issue: unknown): IUnifiedIssue {
   let unifiedIssue: IUnifiedIssue = {
     title: issue.content.title,
     assignees: issue.content.assignees.nodes.map(assignee => assignee.login),
