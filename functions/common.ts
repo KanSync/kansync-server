@@ -12,7 +12,7 @@ export interface IUnifiedIssue {
   createdAt: Date;
   comments: string[];
   lastEditedAt: Date;
-  projectID: string;
+  projectID: number | string;
   dueDate: Date;
   labels: string[];
   dependencies?: IUnifiedIssue[];
