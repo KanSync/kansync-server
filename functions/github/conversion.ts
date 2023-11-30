@@ -1,4 +1,5 @@
-import { Assignee, IUnifiedIssue } from "../common";
+import { Assignee, IUnifiedIssue } from '../common';
+import { IGithubIssue } from "./interfaces";
 
 /**
  * Convert GitHub issue to unified format
@@ -6,10 +7,10 @@ import { Assignee, IUnifiedIssue } from "../common";
  * @param issue - GitHub issue
  * @returns GitHub issue in unified format
  */
-export function toUnified(issue: unknown): IUnifiedIssue {
+export function toUnified(issue: IGithubIssue): IUnifiedIssue {
   let unifiedIssue: IUnifiedIssue = {
     title: issue.content.title,
-    assignees: issue.content.assignees.nodes.map(assignee => assignee.login),
+    assignees: issue.content.assignees.nodes.map(assignee => { return { name: assignee.login } as Assignee }),
     author: { name: issue.content.author.login },
     body: issue.content.body,
     category: issue.status.column,
