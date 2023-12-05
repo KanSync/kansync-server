@@ -12,6 +12,7 @@ app.use(express.static("public"));
 const server = app.listen(3000, () => {
   console.log("Server up and running...");
   console.log("Listening on port %s", (server.address() as any).port);
+  console.log(`Click here to open the app: http://localhost:3000/`);
 });
 
 /*
@@ -24,13 +25,16 @@ const appName = "test_2";
 const scope = "read,write,account";
 const expiration = "never";
 
-const key = process.env.TRELLO_KEY as string;
-const secret = process.env.TRELLO_OAUTH_SECRET as string;
+//const key = process.env.TRELLO_KEY as string;
+//const secret = process.env.TRELLO_OAUTH_SECRET as string;
+
+const key = "";
+const secret = "";
 const loginCallback = `http://localhost:3000/callback`;
 
 // Function to save oauth_secrets to a file
 const saveOAuthSecrets = (secrets: Record<string, string>) => {
-  fs.writeFileSync("oauth_secrets.json", JSON.stringify(secrets));
+  fs.writeFileSync("oauth_secrets.json", JSON.stringify(secrets, null, 2));
 };
 
 // Function to load oauth_secrets from a file
@@ -95,6 +99,9 @@ const callback = (req: Request, res: Response) => {
         res.status(500).send("Error getting OAuth access token");
         return;
       }
+      // Log the accessToken and accessTokenSecret to the console
+      console.log("Access Token:", accessToken);
+      console.log("Access Token Secret:", accessTokenSecret);
 
       oauth.getProtectedResource(
         "https://api.trello.com/1/members/me",
@@ -108,7 +115,11 @@ const callback = (req: Request, res: Response) => {
             return;
           }
           // Save the updated oauth_secrets to the file
-          oauth_secrets[oauth_token] = accessTokenSecret;
+          oauth_secrets["token"] = accessToken;
+          oauth_secrets["accessTokenSecret"] = accessTokenSecret;
+          oauth_secrets["oauth_verifier"] = oauth_verifier;
+          oauth_secrets["oauth_token"] = oauth_token;
+
           saveOAuthSecrets(oauth_secrets);
 
           res.send(data);
@@ -136,4 +147,3 @@ app.get("/", (request: Request, response: Response) => {
     "<h1>Oh, hello there!</h1><a href='./login'>Login with OAuth!</a>",
   );
 });
-
