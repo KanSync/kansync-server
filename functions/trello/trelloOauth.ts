@@ -24,12 +24,9 @@ const appName = "test_2";
 const scope = "read,write,account";
 const expiration = "never";
 
-//const key = process.env.TRELLO_KEY as string;
-//const secret = process.env.TRELLO_OAUTH_SECRET as string;
+const key = process.env.TRELLO_KEY as string;
+const secret = process.env.TRELLO_OAUTH_SECRET as string;
 
-const key = "bf31f9e3d15bfed850a7d318116fdf7e";
-const secret =
-  "fa4813182c225447085d55750e656597898477e4aa3c24454478bc99b0a3fb95";
 const loginCallback = `http://localhost:3000/callback`;
 
 // Function to save oauth_secrets to a file
