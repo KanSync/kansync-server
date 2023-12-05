@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import OAuth from "oauth";
 import url from "url";
-import fs from "fs";
 
 /*
 /   Express Server Setup
@@ -21,7 +20,7 @@ const requestURL = "https://trello.com/1/OAuthGetRequestToken";
 const accessURL = "https://trello.com/1/OAuthGetAccessToken";
 const authorizeURL = "https://trello.com/1/OAuthAuthorizeToken";
 const appName = "test_2";
-const scope = "read,write,account";
+const scope = "read";
 const expiration = "never";
 
 const key = process.env.TRELLO_KEY as string;
@@ -29,23 +28,7 @@ const secret = process.env.TRELLO_OAUTH_SECRET as string;
 
 const loginCallback = `http://localhost:3000/callback`;
 
-// Function to save oauth_secrets to a file
-const saveOAuthSecrets = (secrets: Record<string, string>) => {
-  fs.writeFileSync("oauth_secrets.json", JSON.stringify(secrets));
-};
-
-// Function to load oauth_secrets from a file
-const loadOAuthSecrets = (): Record<string, string> => {
-  try {
-    const data = fs.readFileSync("oauth_secrets.json");
-    return JSON.parse(data.toString());
-  } catch (error) {
-    return {};
-  }
-};
-
-const oauth_secrets: Record<string, string> = loadOAuthSecrets();
-console.log("Trello API Key:", key);
+const oauth_secrets: Record<string, string> = {};
 
 const oauth = new OAuth.OAuth(
   requestURL,
@@ -108,9 +91,6 @@ const callback = (req: Request, res: Response) => {
             res.status(500).send("Error getting protected resource");
             return;
           }
-          // Save the updated oauth_secrets to the file
-          oauth_secrets[oauth_token] = accessTokenSecret;
-          saveOAuthSecrets(oauth_secrets);
 
           res.send(data);
         },
