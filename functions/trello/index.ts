@@ -2,7 +2,7 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
-
+const jsonData = require("./oauth_secrets.json");
 import { List, Card, Member } from "./trelloTypes";
 
 export default async (req: Request, res: Response) => {
@@ -122,14 +122,22 @@ async function getMembersData(
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
 }
 
-  async function fetchAndProcessTrelloData() {
-    try {
-      const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
-      const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
-      console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
+const BOARD_ID = "";
+const API_KEY = "";
+const API_TOKEN = jsonData.token;
 
+async function fetchAndProcessTrelloData() {
+  try {
+    const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
+    const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
+    console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+if (jsonData.token) {
   fetchAndProcessTrelloData();
+} else {
+  console.log("Token not found. Please run the Trello OAuth process first.");
+}

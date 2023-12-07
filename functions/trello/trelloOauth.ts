@@ -34,7 +34,10 @@ const loginCallback = `http://localhost:3000/callback`;
 
 // Function to save oauth_secrets to a file
 const saveOAuthSecrets = (secrets: Record<string, string>) => {
-  fs.writeFileSync("oauth_secrets.json", JSON.stringify(secrets, null, 2));
+  fs.writeFileSync(
+    "./functions/trello/oauth_secrets.json",
+    JSON.stringify(secrets, null, 2),
+  );
 };
 
 // Function to load oauth_secrets from a file
@@ -60,22 +63,29 @@ const oauth = new OAuth.OAuth(
   "HMAC-SHA1",
 );
 
-const login = (request: Request, response: Response) => {
-  oauth.getOAuthRequestToken((error, token, tokenSecret, results) => {
-    if (error) {
-      console.error("Error getting OAuth request token:", error);
-      response.status(500).send("Error getting OAuth request token");
-      return;
-    }
+export const login = (_request: Request, response: Response) => {
+  oauth.getOAuthRequestToken(
+    (
+      error: any,
+      token: string | number,
+      tokenSecret: string,
+      _results: any,
+    ) => {
+      if (error) {
+        console.error("Error getting OAuth request token:", error);
+        response.status(500).send("Error getting OAuth request token");
+        return;
+      }
 
-    oauth_secrets[token] = tokenSecret;
-    response.redirect(
-      `${authorizeURL}?oauth_token=${token}&name=${appName}&scope=${scope}&expiration=${expiration}`,
-    );
-  });
+      oauth_secrets[token] = tokenSecret;
+      response.redirect(
+        `${authorizeURL}?oauth_token=${token}&name=${appName}&scope=${scope}&expiration=${expiration}`,
+      );
+    },
+  );
 };
 
-const callback = (req: Request, res: Response) => {
+export const callback = (req: Request, res: Response) => {
   const query = url.parse(req.url!, true).query as {
     oauth_token: string;
     oauth_verifier: string;
@@ -93,38 +103,21 @@ const callback = (req: Request, res: Response) => {
     oauth_token,
     tokenSecret,
     oauth_verifier,
-    (error, accessToken, accessTokenSecret, results) => {
+    (error: any, accessToken: string, _accessTokenSecret: string) => {
       if (error) {
         console.error("Error getting OAuth access token:", error);
-        res.status(500).send("Error getting OAuth access token");
+        res
+          .status(500)
+          .send(`Error getting OAuth access token: ${error.message}`);
         return;
       }
-      // Log the accessToken and accessTokenSecret to the console
       console.log("Access Token:", accessToken);
-      console.log("Access Token Secret:", accessTokenSecret);
 
-      oauth.getProtectedResource(
-        "https://api.trello.com/1/members/me",
-        "GET",
-        accessToken,
-        accessTokenSecret,
-        (error, data, response) => {
-          if (error) {
-            console.error("Error getting protected resource:", error);
-            res.status(500).send("Error getting protected resource");
-            return;
-          }
-          // Save the updated oauth_secrets to the file
-          oauth_secrets["token"] = accessToken;
-          oauth_secrets["accessTokenSecret"] = accessTokenSecret;
-          oauth_secrets["oauth_verifier"] = oauth_verifier;
-          oauth_secrets["oauth_token"] = oauth_token;
+      res.send("Every thing looks good.");
 
-          saveOAuthSecrets(oauth_secrets);
-
-          res.send(data);
-        },
-      );
+      // Save the updated oauth_secrets to the file
+      oauth_secrets["token"] = accessToken;
+      saveOAuthSecrets(oauth_secrets);
     },
   );
 };
@@ -141,7 +134,7 @@ app.get("/callback", (request: Request, response: Response) => {
   console.log(`GET '/callback' ${Date()}`);
   callback(request, response);
 });
-app.get("/", (request: Request, response: Response) => {
+app.get("/", (_request: Request, response: Response) => {
   console.log(`GET '/'  ${Date()}`);
   response.send(
     "<h1>Oh, hello there!</h1><a href='./login'>Login with OAuth!</a>",
