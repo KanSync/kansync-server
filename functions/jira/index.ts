@@ -3,6 +3,7 @@ import { API_OPS } from "./APIOperations";
 import { HEADERS } from "./header";
 import { Request, Response } from "express";
 import { toUnified } from "./conversion";
+import { allowCors } from "../_utils/helpers";
 
 class ResponseError extends Error {
   constructor(public status: number, m: string) {
@@ -38,7 +39,7 @@ async function getDomainHeader(
 /**
  * Endpoint to get all issues for a Jira project
  */
-export default async (req: Request, res: Response) => {
+const handler = async(req: Request, res: Response) => {
   let reqAuthHeader = req.headers.authorization;
 
   if (reqAuthHeader === undefined) {
@@ -99,6 +100,8 @@ export default async (req: Request, res: Response) => {
   } while (result.startAt + result.maxResults < result.total);
 
   issues = issues.map((issue) => toUnified(issue));
-
+  
   res.status(200).send({ num: issues.length, issues: issues });
 };
+
+export default allowCors(handler);
