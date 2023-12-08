@@ -74,12 +74,11 @@ export async function getCloudID(
     HEADERS.authHeader(oAuthToken),
   );
   console.log(response);
-  // @ts-ignore
+
   if (!Array.isArray(response) || response.length === 0) {
     return undefined;
   }
 
-  // @ts-ignore
   let searchResult = response as IJiraSite[];
   let url = basicDomainURL(domainName);
   let result = searchResult.find((resource) => resource.url === url);

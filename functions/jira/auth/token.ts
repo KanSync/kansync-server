@@ -1,15 +1,11 @@
 import "dotenv/config";
-import { callAPI } from "../callAPI";
-import { API_OPS } from "../APIOperations";
-import { HEADERS } from "../header";
 import { Request, Response } from "express";
 import { OAuth2Client } from "@badgateway/oauth2-client";
-import { allowCors } from "../../_utils/helpers";
 
 // TODO: frontend should probably get these consts from here
-const REDIRECT_URI = "http://localhost:5173/callback";
+const REDIRECT_URI = process.env.REDIRECT_URI;
 const SCOPE = ["read:jira-work", "read:jira-user"];
-const BACKEND_URL = "https://local.functions.nhost.run/v1/jira/auth/token";
+const BACKEND_URL = process.env.SERVER_URL + "/jira/auth/token";
 
 // TODO: Should be hash of the users session ID, works for now but unsafe
 const state = "Safe String";
