@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import OAuth from "oauth";
 import url from "url";
-import fs from "fs";
 
 /*
 /   Express Server Setup
@@ -27,7 +26,7 @@ const expiration = "never";
 
 const key = "";
 const secret = "";
-const loginCallback = `http://localhost:3000/callback`;
+const loginCallback = `http://localhost:5173/trello-callback`;
 
 let token_secret: string = "";
 
@@ -41,76 +40,114 @@ const oauth = new OAuth.OAuth(
   "HMAC-SHA1",
 );
 
-export const login = (_request: Request, response: Response) => {
-  oauth.getOAuthRequestToken(
-    (
-      error: any,
-      token: string | number,
-      tokenSecret: string,
-      _results: any,
-    ) => {
-      if (error) {
-        console.error("Error getting OAuth request token:", error);
-        response.status(500).send("Error getting OAuth request token");
-        return;
-      }
-      token_secret = tokenSecret;
-
-      response.redirect(
-        `${authorizeURL}?oauth_token=${token}&name=${appName}&scope=${scope}&expiration=${expiration}`,
+export const login = async (_request: Request, response: Response) => {
+  try {
+    const requestToken = await new Promise<string>((resolve, reject) => {
+      oauth.getOAuthRequestToken(
+        (error: any, token: string | number, tokenSecret: string) => {
+          if (error) {
+            console.error("Error getting OAuth request token:", error);
+            reject("Error getting OAuth request token");
+            return;
+          }
+          token_secret = tokenSecret;
+          resolve(token as string);
+        },
       );
-    },
-  );
-};
-
-export const callback = (req: Request, res: Response) => {
-  const query = url.parse(req.url!, true).query as {
-    oauth_token: string;
-    oauth_verifier: string;
-  };
-  const { oauth_token, oauth_verifier } = query;
-  const tokenSecret = token_secret;
-
-  if (!tokenSecret) {
-    console.error("Token secret not found for the given OAuth token");
-    res.status(400).send("Token secret not found for the given OAuth token");
-    return;
+    });
+    response.redirect(
+      `${authorizeURL}?oauth_token=${requestToken}&name=${appName}&scope=${scope}&expiration=${expiration}`,
+    );
+  } catch (error) {
+    console.error("Error in login:", error);
+    response.status(500).send("Internal Server Error");
   }
-
-  oauth.getOAuthAccessToken(
-    oauth_token,
-    tokenSecret,
-    oauth_verifier,
-    (error: any, accessToken: string, _accessTokenSecret: string) => {
-      if (error) {
-        console.error("Error getting OAuth access token:", error);
-        res
-          .status(500)
-          .send(`Error getting OAuth access token: ${error.message}`);
-        return;
-      }
-      console.log("Access Token:", accessToken);
-
-      res.send("Every thing looks good.");
-    },
-  );
 };
+
+export const callback = async (req: Request, res: Response) => {
+  try {
+    const query = url.parse(req.url!, true).query as {
+      oauth_token: string;
+      oauth_verifier: string;
+    };
+    const { oauth_token, oauth_verifier } = query;
+    const tokenSecret = token_secret;
+
+    if (!tokenSecret) {
+      console.error("Token secret not found for the given OAuth token");
+      res.status(400).send("Token secret not found for the given OAuth token");
+      return;
+    }
+    const accessToken = await new Promise<string>((resolve, reject) => {
+      oauth.getOAuthAccessToken(
+        oauth_token,
+        tokenSecret,
+        oauth_verifier,
+        (error: any, accessToken: string) => {
+          if (error) {
+            console.error("Error getting OAuth access token:", error);
+            reject(`Error getting OAuth access token: ${error.message}`);
+            return;
+          }
+          resolve(accessToken);
+        },
+      );
+    });
+
+    console.log("Access Token:", accessToken);
+    res.send("Everything looks good.");
+  } catch (error) {
+    console.error("Error in callback:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+// export const login = (_request: Request, response: Response) => {
+//   oauth.getOAuthRequestToken((error, token, tokenSecret) => {
+//     if (error) {
+//       console.error("Error getting OAuth request token:", error);
+//       response.status(500).send("Internal Server Error");
+//       return;
+//     }
+
+//     response.redirect(`https://trello.com/1/OAuthAuthorizeToken?oauth_token=${token}`);
+//   });
+// };
+
+// export const callback = async (req: Request, res: Response) => {
+//   try {
+//     const query = url.parse(req.url!, true).query as {
+//       oauth_token: string;
+//       oauth_verifier: string;
+//     };
+
+//     const { oauth_token, oauth_verifier } = query;
+
+//     oauth.getOAuthAccessToken(oauth_token, "", oauth_verifier, (error, accessToken, accessTokenSecret) => {
+//       if (error) {
+//         console.error("Error getting OAuth access token:", error);
+//         res.status(500).send("Internal Server Error");
+//         return;
+//       }
+//       token_secret = accessToken
+//       // Redirect to the frontend with the access token as a query parameter
+//       res.redirect(`${loginCallback}?accessToken=${accessToken}`);
+//     });
+//     console.log("Access Token:", token_secret);
+//     res.send("Everything looks good.");
+//   } catch (error) {
+//     console.error("Error in callback:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
 /*
 /   Routes
 */
 
-app.get("/login", (request: Request, response: Response) => {
-  console.log(`GET '/login' ${Date()}`);
-  login(request, response);
-});
-
 app.get("/callback", (request: Request, response: Response) => {
-  console.log(`GET '/callback' ${Date()}`);
+  console.log(`GET '/trello-callback' ${Date()}`);
   callback(request, response);
 });
-app.get("/", (_request: Request, response: Response) => {
+app.get("/", (request: Request, response: Response) => {
   console.log(`GET '/'  ${Date()}`);
-  response.send(
-    "<h1>Oh, hello there!</h1><a href='./login'>Login with OAuth!</a>",
-  );
+  login(request, response);
 });
