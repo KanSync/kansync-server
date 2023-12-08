@@ -25,33 +25,11 @@ const appName = "test_2";
 const scope = "read,write,account";
 const expiration = "never";
 
-//const key = process.env.TRELLO_KEY as string;
-//const secret = process.env.TRELLO_OAUTH_SECRET as string;
-
 const key = "";
 const secret = "";
 const loginCallback = `http://localhost:3000/callback`;
 
-// Function to save oauth_secrets to a file
-const saveOAuthSecrets = (secrets: Record<string, string>) => {
-  fs.writeFileSync(
-    "./functions/trello/oauth_secrets.json",
-    JSON.stringify(secrets, null, 2),
-  );
-};
-
-// Function to load oauth_secrets from a file
-const loadOAuthSecrets = (): Record<string, string> => {
-  try {
-    const data = fs.readFileSync("oauth_secrets.json");
-    return JSON.parse(data.toString());
-  } catch (error) {
-    return {};
-  }
-};
-
-const oauth_secrets: Record<string, string> = loadOAuthSecrets();
-console.log("Trello API Key:", key);
+let token_secret: string = "";
 
 const oauth = new OAuth.OAuth(
   requestURL,
@@ -76,8 +54,8 @@ export const login = (_request: Request, response: Response) => {
         response.status(500).send("Error getting OAuth request token");
         return;
       }
+      token_secret = tokenSecret;
 
-      oauth_secrets[token] = tokenSecret;
       response.redirect(
         `${authorizeURL}?oauth_token=${token}&name=${appName}&scope=${scope}&expiration=${expiration}`,
       );
@@ -91,7 +69,7 @@ export const callback = (req: Request, res: Response) => {
     oauth_verifier: string;
   };
   const { oauth_token, oauth_verifier } = query;
-  const tokenSecret = oauth_secrets[oauth_token];
+  const tokenSecret = token_secret;
 
   if (!tokenSecret) {
     console.error("Token secret not found for the given OAuth token");
@@ -114,10 +92,6 @@ export const callback = (req: Request, res: Response) => {
       console.log("Access Token:", accessToken);
 
       res.send("Every thing looks good.");
-
-      // Save the updated oauth_secrets to the file
-      oauth_secrets["token"] = accessToken;
-      saveOAuthSecrets(oauth_secrets);
     },
   );
 };
