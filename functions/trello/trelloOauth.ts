@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import OAuth from "oauth";
 import url from "url";
+import fs from "fs";
 
 /*
 /   Express Server Setup
@@ -24,11 +25,33 @@ const appName = "test_2";
 const scope = "read,write,account";
 const expiration = "never";
 
+// add your keys here
 const key = "";
 const secret = "";
-const loginCallback = `http://localhost:5173/trello-callback`;
+//const loginCallback = `http://localhost:5173/trello-callback`;
+const loginCallback = `http://localhost:3000/callback`;
 
-let token_secret: string = "";
+// let token_secret: string = "";
+
+// Function to save oauth_secrets to a file
+const saveOAuthSecrets = (secrets: Record<string, string>) => {
+  fs.writeFileSync(
+    "./functions/trello/oauth_secrets.json",
+    JSON.stringify(secrets, null, 2),
+  );
+};
+
+// Function to load oauth_secrets from a file
+const loadOAuthSecrets = (): Record<string, string> => {
+  try {
+    const data = fs.readFileSync("oauth_secrets.json");
+    return JSON.parse(data.toString());
+  } catch (error) {
+    return {};
+  }
+};
+
+const oauth_secrets: Record<string, string> = loadOAuthSecrets();
 
 const oauth = new OAuth.OAuth(
   requestURL,
@@ -50,7 +73,8 @@ export const login = async (_request: Request, response: Response) => {
             reject("Error getting OAuth request token");
             return;
           }
-          token_secret = tokenSecret;
+          //token_secret = tokenSecret;
+          oauth_secrets[token] = tokenSecret;
           resolve(token as string);
         },
       );
@@ -71,7 +95,7 @@ export const callback = async (req: Request, res: Response) => {
       oauth_verifier: string;
     };
     const { oauth_token, oauth_verifier } = query;
-    const tokenSecret = token_secret;
+    const tokenSecret = oauth_secrets[oauth_token];
 
     if (!tokenSecret) {
       console.error("Token secret not found for the given OAuth token");
@@ -93,9 +117,11 @@ export const callback = async (req: Request, res: Response) => {
         },
       );
     });
+    res.send("Every thing looks good.");
 
-    console.log("Access Token:", accessToken);
-    res.send("Everything looks good.");
+    // Save the updated oauth_secrets to the file
+    oauth_secrets["token"] = accessToken;
+    saveOAuthSecrets(oauth_secrets);
   } catch (error) {
     console.error("Error in callback:", error);
     res.status(500).send("Internal Server Error");
