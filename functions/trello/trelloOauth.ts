@@ -3,37 +3,42 @@ import OAuth from "oauth";
 import url from "url";
 import fs from "fs";
 
-/*
-/   Express Server Setup
-*/
+/**
+ * Initializes and configures the Express server.
+ */
 const app = express();
 app.use(express.static("public"));
 
+/**
+ * Starts the server and listens on port 3000.
+ */
 const server = app.listen(3000, () => {
   console.log("Server up and running...");
   console.log("Listening on port %s", (server.address() as any).port);
   console.log(`Click here to open the app: http://localhost:3000/`);
 });
 
-/*
-/   OAuth Setup and Functions
-*/
+/**
+ * Configuration for OAuth request, access, and authorization URLs.
+ */
 const requestURL = "https://trello.com/1/OAuthGetRequestToken";
 const accessURL = "https://trello.com/1/OAuthGetAccessToken";
 const authorizeURL = "https://trello.com/1/OAuthAuthorizeToken";
-const appName = "test_2";
+const appName = "KanSync";
 const scope = "read,write,account";
 const expiration = "never";
 
-// add your keys here
+/**
+ * Trello API key and secret. Replace with actual key and secret for production.
+ */
 const key = "";
 const secret = "";
-//const loginCallback = `http://localhost:5173/trello-callback`;
 const loginCallback = `http://localhost:3000/callback`;
 
-// let token_secret: string = "";
-
-// Function to save oauth_secrets to a file
+/**
+ * Function to save OAuth secrets to a file for persistence.
+ * @param {Record<string, string>} secrets - The OAuth secrets to be saved.
+ */
 const saveOAuthSecrets = (secrets: Record<string, string>) => {
   fs.writeFileSync(
     "./functions/trello/oauth_secrets.json",
@@ -41,7 +46,10 @@ const saveOAuthSecrets = (secrets: Record<string, string>) => {
   );
 };
 
-// Function to load oauth_secrets from a file
+/**
+ * Function to load OAuth secrets from a file.
+ * @returns {Record<string, string>} The loaded OAuth secrets.
+ */
 const loadOAuthSecrets = (): Record<string, string> => {
   try {
     const data = fs.readFileSync("oauth_secrets.json");
@@ -51,8 +59,14 @@ const loadOAuthSecrets = (): Record<string, string> => {
   }
 };
 
+/**
+ * Loads or initializes OAuth secrets.
+ */
 const oauth_secrets: Record<string, string> = loadOAuthSecrets();
 
+/**
+ * Initializes the OAuth object using the OAuth library.
+ */
 const oauth = new OAuth.OAuth(
   requestURL,
   accessURL,
@@ -63,6 +77,11 @@ const oauth = new OAuth.OAuth(
   "HMAC-SHA1",
 );
 
+/**
+ * Endpoint to initiate the OAuth login process.
+ * @param {Request} _request - The request object.
+ * @param {Response} response - The response object.
+ */
 export const login = async (_request: Request, response: Response) => {
   try {
     const requestToken = await new Promise<string>((resolve, reject) => {
@@ -73,12 +92,12 @@ export const login = async (_request: Request, response: Response) => {
             reject("Error getting OAuth request token");
             return;
           }
-          //token_secret = tokenSecret;
-          oauth_secrets[token] = tokenSecret;
+          oauth_secrets[token] = tokenSecret; // Store the token secret
           resolve(token as string);
         },
       );
     });
+    // Redirect user to Trello for authorization
     response.redirect(
       `${authorizeURL}?oauth_token=${requestToken}&name=${appName}&scope=${scope}&expiration=${expiration}`,
     );
@@ -88,6 +107,11 @@ export const login = async (_request: Request, response: Response) => {
   }
 };
 
+/**
+ * Callback endpoint for handling the OAuth response from Trello.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ */
 export const callback = async (req: Request, res: Response) => {
   try {
     const query = url.parse(req.url!, true).query as {
@@ -127,47 +151,6 @@ export const callback = async (req: Request, res: Response) => {
     res.status(500).send("Internal Server Error");
   }
 };
-// export const login = (_request: Request, response: Response) => {
-//   oauth.getOAuthRequestToken((error, token, tokenSecret) => {
-//     if (error) {
-//       console.error("Error getting OAuth request token:", error);
-//       response.status(500).send("Internal Server Error");
-//       return;
-//     }
-
-//     response.redirect(`https://trello.com/1/OAuthAuthorizeToken?oauth_token=${token}`);
-//   });
-// };
-
-// export const callback = async (req: Request, res: Response) => {
-//   try {
-//     const query = url.parse(req.url!, true).query as {
-//       oauth_token: string;
-//       oauth_verifier: string;
-//     };
-
-//     const { oauth_token, oauth_verifier } = query;
-
-//     oauth.getOAuthAccessToken(oauth_token, "", oauth_verifier, (error, accessToken, accessTokenSecret) => {
-//       if (error) {
-//         console.error("Error getting OAuth access token:", error);
-//         res.status(500).send("Internal Server Error");
-//         return;
-//       }
-//       token_secret = accessToken
-//       // Redirect to the frontend with the access token as a query parameter
-//       res.redirect(`${loginCallback}?accessToken=${accessToken}`);
-//     });
-//     console.log("Access Token:", token_secret);
-//     res.send("Everything looks good.");
-//   } catch (error) {
-//     console.error("Error in callback:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
-/*
-/   Routes
-*/
 
 app.get("/callback", (request: Request, response: Response) => {
   console.log(`GET '/trello-callback' ${Date()}`);
