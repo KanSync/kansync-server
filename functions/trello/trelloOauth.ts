@@ -3,6 +3,7 @@ import OAuth from "oauth";
 import url from "url";
 import fs from "fs";
 
+const boardId = '';
 /**
  * Initializes and configures the Express server.
  */
@@ -141,7 +142,18 @@ export const callback = async (req: Request, res: Response) => {
         },
       );
     });
-    res.send("Every thing looks good.");
+    
+    const cardsUrl = `https://api.trello.com/1/boards/${boardId}/cards`;
+    oauth.get(cardsUrl, accessToken, '', async (error, data, response) => {
+      if (error) {
+        console.error("Error fetching cards from Trello:", error);
+        res.status(500).send("Error fetching cards");
+        return;
+      }
+      const cards = JSON.parse(data);
+      // Do something with the cards, e.g., send them back to the client
+      res.json(cards);
+    });
 
     // Save the updated oauth_secrets to the file
     oauth_secrets["token"] = accessToken;
