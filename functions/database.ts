@@ -80,6 +80,8 @@ export async function initDB() {
         await client.query(create_users_table);
         await client.query(create_projects_table);
         await client.query(create_issues_table);
+    } catch(error) {
+        console.log(`Init: ${error}`)
     } finally {
         await client.end();
     }
@@ -101,6 +103,8 @@ export async function getIssuesFromDB(user_name: string, project_name: string): 
         for await (const row of query_result) {
             result.push(row.reify())
         }
+    } catch(error) {
+        console.log(`Get: ${error}`)
     } finally {
         await client.end();
     }
@@ -133,6 +137,8 @@ export async function storeIssuesToDB(user_name: string, project_name: string, i
 
         await client.query(issue_query(new_id))
 
+    } catch(error) {
+        console.log(`Store: ${error}`)
     } finally {
         await client.end();
     }
@@ -142,3 +148,20 @@ export async function storeIssuesToDB(user_name: string, project_name: string, i
 export function userExists(user: string): boolean {
     return true
 }
+
+storeIssuesToDB("Tom", "bombadil", [{
+    "title": "Wow must be done",
+    "assignees": [],
+    "author": {
+        "name": "Linus"
+    },
+    "body": null,
+    "category": "To Do",
+    "statusChangeTime": new Date("2023-11-16T13:03:54.161Z"),
+    "createdAt": new Date("2023-11-16T13:03:53.690Z"),
+    "comments": [],
+    "lastEditedAt": new Date("2023-11-16T13:03:54.048Z"),
+    "projectID": "10000",
+    "dueDate": null,
+    "labels": []
+}])
