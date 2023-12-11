@@ -1,21 +1,22 @@
+import { Request, Response } from "express";
 import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { HEADERS } from "./header";
-import { Request, Response } from 'express'
 import { toUnified } from "./conversion"
+import { IUnifiedIssue, handleIssueRequest } from "../common";
 
 /**
  * Endpoint to get all issues for a Jira project
  */
-export default async (req: Request, res: Response) => {
+async function getIssuesFromJira(req: Request, res: Response): Promise<IUnifiedIssue[] | undefined> {
   let token = req.query.token;
   let email = req.query.email;
   let domainName = req.query.name;
   let projectKey = req.query.projectKey;
 
   if (token === undefined || email === undefined || domainName === undefined || projectKey === undefined) {
-    res.status(400).send(`Missing token, email, domain name or project key.`)
-    return
+    res.status(400).send(`Missing token, email, domain name or project key.`);
+    return;
   }
 
   // These are parsed from queries and can therefore be a string or undefined. We have already checked that they are not undefined which is why we set them to string.
@@ -49,5 +50,9 @@ export default async (req: Request, res: Response) => {
   issues = issues.map(issue => toUnified(issue));
 
   res.status(200).send({ "num": issues.length, "issues": issues });
+  return issues
 }
 
+export default async (req: Request, res: Response) => {
+  await handleIssueRequest(req, res, getIssuesFromJira);
+}
