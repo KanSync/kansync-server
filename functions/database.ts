@@ -34,27 +34,13 @@ export async function storeIssuesToDB(user_name: string, project_name: string, i
     await client.issues.createMany({data: issues.map(issue => Object.assign(issue, { projectID: created_project.id}))})
 }
 
-// TODO: check if user exists in db
-export function userExists(user: string): boolean {
-    return true
+export async function projectExists(user_name: string, project_name: string): Promise<boolean> {
+    let project = await client.projects.findFirst({where: {user_name: user_name, name: project_name}})
+
+    return project != null
 }
 
-// storeIssuesToDB("Tom", "Bombadil", [{
-//     id: undefined,
-//     "title": "Wow must be done",
-//     "assignees": [],
-//     "author": {
-//         "name": "Linus"
-//     },
-//     "body": null,
-//     "category": "To Do",
-//     "statusChangeTime": new Date("2023-11-16T13:03:54.161Z"),
-//     "createdAt": new Date("2023-11-16T13:03:53.690Z"),
-//     "comments": [],
-//     "lastEditedAt": new Date("2023-11-16T13:03:54.048Z"),
-//     "projectID": 0,
-//     "dueDate": null,
-//     "labels": []
-// }])
-
-// getIssuesFromDB("Tom", "Bombadil").then(data => console.log(data))
+// TODO: check if user exists in db
+export async function userExists(user: string): Promise<boolean> {
+    return true
+}

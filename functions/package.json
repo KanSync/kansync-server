@@ -4,12 +4,12 @@
   "description": "The backend portion of the project KanSync",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && generate",
-    "start": "npx ts-node src/index.ts && generate",
+    "build": "tsc",
+    "start": "npx ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:schema": "ts-node src/schema/index.ts",
-    "generate": "npm -s run generate:prisma",
-    "generate:prisma": "prisma generate"
+    "generate": "npx prisma generate",
+    "migrate": "npx prisma migrate",
+    "format": "npx prisma format"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
