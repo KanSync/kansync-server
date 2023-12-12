@@ -1,0 +1,42 @@
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../.prisma/client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+model KanSyncUsers {
+  login    String     @id
+  Projects Projects[]
+}
+
+model Projects {
+  id        Int          @id @default(autoincrement())
+  name      String
+  user      KanSyncUsers @relation(fields: [user_name], references: [login], onUpdate: Cascade, onDelete: Cascade)
+  user_name String
+  Issues    Issues[]
+
+  @@unique([user_name, name])
+}
+
+model Issues {
+  id               Int       @id @default(autoincrement())
+  title            String
+  assignees        Json?
+  author           Json?
+  body             String?
+  category         String
+  statusChangeTime DateTime?
+  createdAt        DateTime
+  comments         String[]
+  lastEditedAt     DateTime?
+  dueDate          DateTime?
+  labels           String[]
+  project          Projects  @relation(fields: [projectID], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  projectID        Int
+}

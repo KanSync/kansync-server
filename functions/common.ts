@@ -1,33 +1,22 @@
 import { Request, Response } from "express";
 import { getIssuesFromDB, storeIssuesToDB, userExists } from "./database";
+import type { Issues } from '../.prisma/client'
 
 export interface Assignee {
   name: string;
 }
 
-export interface IUnifiedIssue {
-  title: string;
-  assignees: Assignee[];
-  author: Assignee;
-  body: string;
-  category: string;
-  statusChangeTime: Date;
-  createdAt: Date;
-  comments: string[];
-  lastEditedAt: Date;
-  projectID: number | string;
-  dueDate: Date;
-  labels: string[];
+export interface IUnifiedIssue extends Issues {
   dependencies?: IUnifiedIssue[];
 }
 
-/**
- * Handle get issue requests i.e. if they should be obtained from the database or from external APIs.
- * 
- * @param req - Incoming request
- * @param res - Outgoing response
- * @param getIssuesFromBoard - Function to get issues from an external board, should sending response
- */
+// /**
+//  * Handle get issue requests i.e. if they should be obtained from the database or from external APIs.
+//  * 
+//  * @param req - Incoming request
+//  * @param res - Outgoing response
+//  * @param getIssuesFromBoard - Function to get issues from an external board, should sending response
+//  */
 export async function handleIssueRequest(req: Request, res: Response, getIssuesFromBoard: (req: Request, res: Response) => Promise<IUnifiedIssue[] | undefined>): Promise<void> {
   let user = req.query.user
   let project_name = req.query.project_name
