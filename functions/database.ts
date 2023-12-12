@@ -40,7 +40,13 @@ export async function projectExists(user_name: string, project_name: string): Pr
     return project != null
 }
 
-// TODO: check if user exists in db
-export async function userExists(user: string): Promise<boolean> {
-    return true
+
+export async function userExists(user_name: string): Promise<boolean> {
+    let user = await client.kanSyncUsers.findUnique({where: {login: user_name}})
+
+    return user != null
+}
+
+export async function createUser(user_name: string): Promise<void> {
+    await client.kanSyncUsers.create({data: {login: user_name}})
 }

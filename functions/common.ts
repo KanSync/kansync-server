@@ -43,9 +43,13 @@ export async function handleIssueRequest(
   user = user as string;
   project_name = project_name as string;
 
-  if (!userExists(user)) {
-    res.status(400).send("Invalid user.");
-    return;
+  try {
+    if (!userExists(user)) {
+      res.status(400).send("Invalid user.");
+      return;
+    }
+  } catch (error) {
+    res.status(500).send("Failed to validate user.");
   }
 
   if (update || !projectExists(user, project_name)) {
