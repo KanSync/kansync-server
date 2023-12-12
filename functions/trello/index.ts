@@ -4,8 +4,9 @@ import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
 
 import { List, Card, Member } from "./trelloTypes";
+import { handleIssueRequest } from "../common";
 
-export default async (req: Request, res: Response) => {
+async function handler(req: Request, res: Response) {
   const boardId = req.query.boardId as string;
   const apiKey = req.query.apiKey as string;
   const apiToken = req.query.apiToken as string;
@@ -19,7 +20,9 @@ export default async (req: Request, res: Response) => {
 
   try {
     const boardData = await getBoardData(boardId, apiKey, apiToken);
-    res.status(200).send(boardData);
+    let issues = convertTrelloDataToUnifiedIssues(boardData.lists)
+    res.status(200).send({ "num": boardData.totalCardCount, "issues": issues });
+    return issues
   } catch (error) {
     console.error("Error fetching board data:", error);
     res.status(500).send(`Internal Server Error: ${error.message}`);
@@ -122,14 +125,19 @@ async function getMembersData(
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
 }
 
-  async function fetchAndProcessTrelloData() {
-    try {
-      const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
-      const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
-      console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
+// async function fetchAndProcessTrelloData() {
+//   try {
+//     const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
+//     const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
+//     console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// }
+// 
+// fetchAndProcessTrelloData();
 
-  fetchAndProcessTrelloData();
+
+export default async (req: Request, res: Response) => {
+  await handleIssueRequest(req, res, handler);
+}

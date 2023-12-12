@@ -8,7 +8,7 @@ import { IUnifiedIssue, handleIssueRequest } from "../common";
 /**
  * Endpoint to get all issues for a Jira project
  */
-async function getIssuesFromJira(req: Request, res: Response): Promise<IUnifiedIssue[] | undefined> {
+async function handler(req: Request, res: Response): Promise<IUnifiedIssue[] | undefined> {
   let token = req.query.token;
   let email = req.query.email;
   let domainName = req.query.name;
@@ -54,5 +54,5 @@ async function getIssuesFromJira(req: Request, res: Response): Promise<IUnifiedI
 }
 
 export default async (req: Request, res: Response) => {
-  await handleIssueRequest(req, res, getIssuesFromJira);
+  await handleIssueRequest(req, res, handler);
 }

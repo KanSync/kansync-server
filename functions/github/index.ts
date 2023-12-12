@@ -5,6 +5,7 @@ import { allowCors } from "../_utils/helpers";
 import { GET_PROJECT_CARDS } from "./schema/getProjectCards";
 import { toUnified } from "./conversion";
 import { IGithubIssue } from './interfaces';
+import { handleIssueRequest } from "../common";
 
 const handler = async (req: Request, res: Response) => {
   if (!process.env.PERSONAL_ACCESS_TOKEN) {
@@ -32,7 +33,12 @@ const handler = async (req: Request, res: Response) => {
 
   let issues = result.data.search.nodes[0].projectsV2.nodes[0].items.nodes.map((issue: IGithubIssue) => toUnified(issue))
 
-  res.status(200).send(issues);
+  res.status(200).send({ "num": issues.length, "issues": issues });
+  return issues;
 };
 
-export default allowCors(handler);
+async function DBHandler(req, res) {
+  await handleIssueRequest(req, res, handler);
+}
+
+export default allowCors(DBHandler);
