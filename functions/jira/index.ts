@@ -1,29 +1,86 @@
 import { Request, Response } from "express";
-import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { HEADERS } from "./header";
-import { toUnified } from "./conversion"
+import { toUnified } from "./conversion";
+import { basicDomainURL, callAPI, getCloudID, oAuthDomainURL } from "./callAPI";
 import { IUnifiedIssue, handleIssueRequest } from "../common";
+import { allowCors } from "../_utils/helpers";
+
+class ResponseError extends Error {
+  constructor(public status: number, m: string) {
+    super(m);
+  }
+}
+
+async function getDomainHeader(
+  token: string,
+  tokenType: string,
+  domainName: string,
+): Promise<[string, Headers]> {
+  let domainURL: string;
+  let authHeader: Headers;
+
+  if (tokenType === "Bearer") {
+    authHeader = HEADERS.authHeader(token);
+    let cloudID = await getCloudID(token, domainName);
+
+    if (cloudID === undefined) {
+      throw new ResponseError(400, "Failed getting cloud ID.");
+    }
+    domainURL = oAuthDomainURL(cloudID);
+  } else if (tokenType === "Basic") {
+    authHeader = HEADERS.basicAuthHeader(token);
+    domainURL = basicDomainURL(domainName);
+  } else {
+    throw new ResponseError(403, "Invalid token.");
+  }
+  return [domainURL, authHeader];
+}
 
 /**
  * Endpoint to get all issues for a Jira project
  */
-async function handler(req: Request, res: Response): Promise<IUnifiedIssue[] | undefined> {
-  let token = req.query.token;
-  let email = req.query.email;
-  let domainName = req.query.name;
-  let projectKey = req.query.projectKey;
+async function handler(
+  req: Request,
+  res: Response,
+): Promise<IUnifiedIssue[] | undefined> {
+  let reqAuthHeader = req.headers.authorization;
 
-  if (token === undefined || email === undefined || domainName === undefined || projectKey === undefined) {
-    res.status(400).send(`Missing token, email, domain name or project key.`);
+  if (reqAuthHeader === undefined) {
+    res.status(403).send(`Missing authorization header.`);
     return;
   }
 
-  // These are parsed from queries and can therefore be a string or undefined. We have already checked that they are not undefined which is why we set them to string.
-  token = token as string;
-  email = email as string;
+  let [tokenType, token] = reqAuthHeader.split(" ");
+  let domainName = req.query.name;
+  let projectKey = req.query.projectKey;
+
+  if (
+    token === undefined ||
+    domainName === undefined ||
+    projectKey === undefined
+  ) {
+    res.status(400).send(`Missing token, domain name or project key.`);
+    return;
+  }
+
+  // These are parsed from queries and can therefore be a string or undefined.
   domainName = domainName as string;
   projectKey = projectKey as string;
+
+  let domainURL: string;
+  let authHeader: Headers;
+
+  try {
+    [domainURL, authHeader] = await getDomainHeader(
+      token,
+      tokenType,
+      domainName,
+    );
+  } catch (error) {
+    res.status(error.status).send(error.message);
+    return;
+  }
 
   let starting_issue = 0;
   let issues = [];
@@ -32,9 +89,9 @@ async function handler(req: Request, res: Response): Promise<IUnifiedIssue[] | u
   // Jira will only return a set amount of issues (standard 50). This loop handles multiple pages of issues.
   do {
     result = await callAPI(
-      domainName,
+      domainURL,
       API_OPS.getIssues(projectKey, starting_issue),
-      HEADERS.basicAuthHeader(token, email)
+      authHeader,
     );
 
     if (result.startAt === undefined) {
@@ -44,15 +101,14 @@ async function handler(req: Request, res: Response): Promise<IUnifiedIssue[] | u
 
     issues = issues.concat(result.issues);
     starting_issue += result.maxResults;
+  } while (result.startAt + result.maxResults < result.total);
 
-  } while ((result.startAt + result.maxResults) < result.total);
+  issues = issues.map((issue) => toUnified(issue));
 
-  issues = issues.map(issue => toUnified(issue));
-
-  res.status(200).send({ "num": issues.length, "issues": issues });
-  return issues
+  res.status(200).send({ num: issues.length, issues: issues });
+  return issues;
 }
 
-export default async (req: Request, res: Response) => {
+export default allowCors(async (req: Request, res: Response) => {
   await handleIssueRequest(req, res, handler);
-}
+});
