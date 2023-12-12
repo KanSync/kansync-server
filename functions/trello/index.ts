@@ -2,8 +2,9 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
-const jsonData = require("./oauth_secrets.json");
+//const jsonData = require("./oauth_secrets.json");
 import { List, Card, Member } from "./trelloTypes";
+import { StringIterator } from "lodash";
 
 export default async (req: Request, res: Response) => {
   const boardId = req.query.boardId as string;
@@ -122,22 +123,23 @@ async function getMembersData(
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
 }
 
-const BOARD_ID = "";
-const API_KEY = "";
-const API_TOKEN = jsonData.token;
-
-async function fetchAndProcessTrelloData() {
+export async function fetchAndProcessTrelloData({
+  BOARD_ID,
+  API_KEY,
+  API_TOKEN,
+}: {
+  BOARD_ID: string;
+  API_KEY: string;
+  API_TOKEN: string;
+}): Promise<string | object> {
   try {
     const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
     const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
-    console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
+
+    return unifiedIssues;
   } catch (error) {
     console.error("Error:", error);
-  }
-}
 
-if (jsonData.token) {
-  fetchAndProcessTrelloData();
-} else {
-  console.log("Token not found. Please run the Trello OAuth process first.");
+    return {};
+  }
 }

@@ -2,8 +2,9 @@ import express, { Request, Response } from "express";
 import OAuth from "oauth";
 import url from "url";
 import fs from "fs";
+import { fetchAndProcessTrelloData } from "./index";
 
-const boardId = '';
+const boardId = "";
 /**
  * Initializes and configures the Express server.
  */
@@ -142,18 +143,25 @@ export const callback = async (req: Request, res: Response) => {
         },
       );
     });
-    
-    const cardsUrl = `https://api.trello.com/1/boards/${boardId}/cards`;
-    oauth.get(cardsUrl, accessToken, '', async (error, data, response) => {
-      if (error) {
-        console.error("Error fetching cards from Trello:", error);
-        res.status(500).send("Error fetching cards");
-        return;
-      }
-      const cards = JSON.parse(data);
-      // Do something with the cards, e.g., send them back to the client
-      res.json(cards);
+
+    // const cardsUrl = `https://api.trello.com/1/boards/${boardId}/cards`;
+    // oauth.get(cardsUrl, accessToken, '', async (error, data, response) => {
+    //   if (error) {
+    //     console.error("Error fetching cards from Trello:", error);
+    //     res.status(500).send("Error fetching cards");
+    //     return;
+    //   }
+    //   const cards = JSON.parse(data.toString());
+    //   // Do something with the cards, e.g., send them back to the client
+    //   res.json(cards);
+    // });
+
+    const unifiedCards = await fetchAndProcessTrelloData({
+      BOARD_ID: boardId,
+      API_KEY: key,
+      API_TOKEN: accessToken,
     });
+    res.json(unifiedCards);
 
     // Save the updated oauth_secrets to the file
     oauth_secrets["token"] = accessToken;
@@ -165,7 +173,7 @@ export const callback = async (req: Request, res: Response) => {
 };
 
 app.get("/callback", (request: Request, response: Response) => {
-  console.log(`GET '/trello-callback' ${Date()}`);
+  console.log(`GET '/callback' ${Date()}`);
   callback(request, response);
 });
 app.get("/", (request: Request, response: Response) => {
