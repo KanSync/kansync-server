@@ -15,6 +15,7 @@ tmp
 
 .secrets
 .nhost
+.prisma
 
 # Coverage reports
 coverage
