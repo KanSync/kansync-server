@@ -73,7 +73,6 @@ export async function getCloudID(
     API_OPS.getAccessibleResources(),
     HEADERS.authHeader(oAuthToken),
   );
-  console.log(response);
 
   if (!Array.isArray(response) || response.length === 0) {
     return undefined;

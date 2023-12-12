@@ -55,8 +55,9 @@ export async function handleIssueRequest(
     if (issues !== undefined) {
       try {
         await storeIssuesToDB(user, project_name, issues);
-      } catch {
+      } catch (error) {
         // If the store fails ignore it as getIssuesFromBoard already consumes the response
+        console.log(error)
       }
     }
     return;

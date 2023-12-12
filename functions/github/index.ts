@@ -9,11 +9,18 @@ import { handleIssueRequest } from "../common";
 
 const handler = async (req: Request, res: Response) => {
   if (!process.env.PERSONAL_ACCESS_TOKEN) {
-    return res.status(500).send("Missing PERSONAL_ACCESS_TOKEN");
+    res.status(500).send("Missing PERSONAL_ACCESS_TOKEN");
+    return;
   }
 
-  const search = req.query.search;
+  const repo = req.query.repo;
   const name = req.query.projectName;
+
+  if (repo === undefined || name === undefined
+  ) {
+    res.status(400).send(`Missing repository or project name.`);
+    return;
+  }
 
   const result = await fetch("https://api.github.com/graphql", {
     headers: {
@@ -24,14 +31,28 @@ const handler = async (req: Request, res: Response) => {
     body: JSON.stringify({
       query: GET_PROJECT_CARDS,
       variables: {
-        repo: search,
+        repo: repo,
         projectName: name,
       },
     }),
     method: "POST",
   }).then((response) => response.json());
 
-  let issues = result.data.search.nodes[0].projectsV2.nodes[0].items.nodes.map((issue: IGithubIssue) => toUnified(issue))
+  let res_repo = result.data.search.nodes
+
+  if (res_repo.length == 0) {
+    res.status(404).send("Unable to find repository.");
+    return;
+  }
+
+  let res_project = res_repo[0].projectsV2.nodes
+
+  if (res_project.length == 0) {
+    res.status(404).send("Unable to find project.");
+    return;
+  }
+  
+  let issues = res_project[0].items.nodes.map((issue: IGithubIssue) => toUnified(issue))
 
   res.status(200).send({ "num": issues.length, "issues": issues });
   return issues;

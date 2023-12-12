@@ -33,7 +33,7 @@ devDependencies:
     version: 4.17.21
   '@types/node':
     specifier: ^20.9.0
-    version: 20.9.0
+    version: 20.10.4
   prisma:
     specifier: ^5.7.0
     version: 5.7.0
