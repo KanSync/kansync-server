@@ -6,10 +6,6 @@ declare global {
             REDIRECT_URI: string;
             SERVER_URL: string;
             DATABASE_URL: string;
-            DATABASE_PORT: number;
-            DATABASE_USER: string;
-            DATABASE_PASSWORD: string;
-            DATABASE_NAME: string;
         }
     }
 }
