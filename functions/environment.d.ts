@@ -6,6 +6,7 @@ declare global {
             GITHUB_CLIENT_SECRET: string;
             REDIRECT_URI: string;
             SERVER_URL: string;
+            DATABASE_URL: string;
         }
     }
 }
