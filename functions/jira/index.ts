@@ -1,8 +1,9 @@
-import { basicDomainURL, callAPI, getCloudID, oAuthDomainURL } from "./callAPI";
+import { Request, Response } from "express";
 import { API_OPS } from "./APIOperations";
 import { HEADERS } from "./header";
-import { Request, Response } from "express";
 import { toUnified } from "./conversion";
+import { basicDomainURL, callAPI, getCloudID, oAuthDomainURL } from "./callAPI";
+import { IUnifiedIssue, handleIssueRequest } from "../common";
 import { allowCors } from "../_utils/helpers";
 
 class ResponseError extends Error {
@@ -39,7 +40,10 @@ async function getDomainHeader(
 /**
  * Endpoint to get all issues for a Jira project
  */
-const handler = async(req: Request, res: Response) => {
+async function handler(
+  req: Request,
+  res: Response,
+): Promise<IUnifiedIssue[] | undefined> {
   let reqAuthHeader = req.headers.authorization;
 
   if (reqAuthHeader === undefined) {
@@ -100,8 +104,11 @@ const handler = async(req: Request, res: Response) => {
   } while (result.startAt + result.maxResults < result.total);
 
   issues = issues.map((issue) => toUnified(issue));
-  
-  res.status(200).send({ num: issues.length, issues: issues });
-};
 
-export default allowCors(handler);
+  res.status(200).send({ num: issues.length, issues: issues });
+  return issues;
+}
+
+export default allowCors(async (req: Request, res: Response) => {
+  await handleIssueRequest(req, res, handler);
+});
