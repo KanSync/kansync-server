@@ -1,3 +1,4 @@
+import { allowCors } from "../_utils/helpers";
 import { userExists } from "../database";
 import { Request, Response } from "express";
 
@@ -21,4 +22,4 @@ async function handler(req: Request, res: Response) {
     res.status(200).send("Successful login.");
 }
 
-export default handler;
+export default allowCors(handler);
