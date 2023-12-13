@@ -15,7 +15,10 @@ tmp
 
 .secrets
 .nhost
+
+# Database
 .prisma
+migrations
 
 # Coverage reports
 coverage
