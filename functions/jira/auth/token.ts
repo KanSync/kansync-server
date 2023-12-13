@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Request, Response } from "express";
 import { OAuth2Client } from "@badgateway/oauth2-client";
-import auth from "../../oauth";
+import { auth } from "../../oauth";
 
 
 const client = new OAuth2Client({
@@ -15,5 +15,5 @@ const client = new OAuth2Client({
 
 
 export default async (req: Request, res: Response) => {
-  await auth(req, res, client)
+  await auth(req, res, client, false)
 }
