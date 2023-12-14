@@ -6,11 +6,15 @@
   "scripts": {
     "build": "tsc",
     "start": "npx ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "npx prisma generate",
+    "migrate": "npx prisma migrate dev --name init",
+    "format": "npx prisma format"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.10.3",
+    "@types/node": "^20.9.0",
+    "prisma": "^5.7.0",
     "typescript": "^5.2.2"
   },
   "keywords": [],
@@ -19,6 +23,7 @@
   "dependencies": {
     "@badgateway/oauth2-client": "^2.2.4",
     "@octokit/graphql": "^7.0.2",
+    "@prisma/client": "^5.7.0",
     "axios": "^1.6.1",
     "dotenv": "^16.3.1",
     "octokit": "^3.1.1",

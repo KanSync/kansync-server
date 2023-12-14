@@ -2,7 +2,6 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
-//const jsonData = require("./oauth_secrets.json");
 import { List, Card, Member } from "./trelloTypes";
 import { StringIterator } from "lodash";
 
