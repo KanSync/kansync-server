@@ -38,33 +38,9 @@ const secret = "";
 const loginCallback = `http://localhost:3000/callback`;
 
 /**
- * Function to save OAuth secrets to a file for persistence.
- * @param {Record<string, string>} secrets - The OAuth secrets to be saved.
- */
-const saveOAuthSecrets = (secrets: Record<string, string>) => {
-  fs.writeFileSync(
-    "./functions/trello/oauth_secrets.json",
-    JSON.stringify(secrets, null, 2),
-  );
-};
-
-/**
- * Function to load OAuth secrets from a file.
- * @returns {Record<string, string>} The loaded OAuth secrets.
- */
-const loadOAuthSecrets = (): Record<string, string> => {
-  try {
-    const data = fs.readFileSync("oauth_secrets.json");
-    return JSON.parse(data.toString());
-  } catch (error) {
-    return {};
-  }
-};
-
-/**
  * Loads or initializes OAuth secrets.
  */
-const oauth_secrets: Record<string, string> = loadOAuthSecrets();
+const oauth_secrets: Record<string, string> = {};
 
 /**
  * Initializes the OAuth object using the OAuth library.
@@ -130,7 +106,7 @@ const handleOAuth = async (req: Request, res: Response) => {
 
       // Save the updated oauth_secrets to the file
       oauth_secrets["token"] = accessToken;
-      saveOAuthSecrets(oauth_secrets);
+      //saveOAuthSecrets(oauth_secrets);
     } else {
       // Handle login logic
       const requestToken = await new Promise<string>((resolve, reject) => {

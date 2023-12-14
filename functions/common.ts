@@ -9,9 +9,11 @@ import type { Issues } from "../.prisma/client";
 
 export interface Assignee {
   name: string;
+  [key: string]: any;
 }
 
 export interface IUnifiedIssue extends Issues {
+  projectID: string;
   dependencies?: IUnifiedIssue[];
 }
 

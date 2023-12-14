@@ -26,6 +26,7 @@ export function convertTrelloDataToUnifiedIssues(
         dueDate: new Date(card.due) || null,
         labels: card.labels.map(label => label.name),
         dependencies: [],
+        id: 0
       };
       unifiedIssues.push(unifiedIssue);
     });
