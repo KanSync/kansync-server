@@ -11,7 +11,7 @@ export interface Assignee {
   name: string;
 }
 
-export interface IUnifiedIssue extends Issues {
+export interface IUnifiedIssue extends Omit<Issues, 'id'> {
   dependencies?: IUnifiedIssue[];
 }
 
