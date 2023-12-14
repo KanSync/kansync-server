@@ -67,7 +67,7 @@ const handler = async (req: Request, res: Response) => {
     let pageInfo = res_project[0].items.pageInfo;
     hasNextPage = pageInfo.hasNextPage;
     cursor = pageInfo.endCursor;
-    //console.log(res_project[0].items.nodes.map(issue => issue.content))
+
     try {
       res_project[0].items.nodes.map((issue: IGithubIssue) => {
         if (Object.keys(issue.content).length !== 0) {
