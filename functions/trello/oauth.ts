@@ -1,24 +1,7 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import OAuth from "oauth";
 import url from "url";
-import fs from "fs";
-import { fetchAndProcessTrelloData } from "./index";
-
-const boardId = "";
-/**
- * Initializes and configures the Express server.
- */
-const app = express();
-app.use(express.static("public"));
-
-/**
- * Starts the server and listens on port 3000.
- */
-const server = app.listen(3000, () => {
-  console.log("Server up and running...");
-  console.log("Listening on port %s", (server.address() as any).port);
-  console.log(`Click here to open the app: http://localhost:3000/`);
-});
+import "dotenv/config";
 
 /**
  * Configuration for OAuth request, access, and authorization URLs.
@@ -33,9 +16,10 @@ const expiration = "never";
 /**
  * Trello API key and secret. Replace with actual key and secret for production.
  */
-const key = "";
-const secret = "";
-const loginCallback = `http://localhost:3000/callback`;
+const key = "9b2b5ff508f04db5cad09671d541f23b";
+const secret =
+  "ca8c8ffa107a0eca5c128a226a070355821ab950a7149a5ad211254a793cded8";
+const loginCallback = "http://localhost:5173/dashboard";
 
 /**
  * Loads or initializes OAuth secrets.
@@ -62,7 +46,7 @@ const oauth = new OAuth.OAuth(
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
  */
-const handleOAuth = async (req: Request, res: Response) => {
+export const handleOAuth = async (req: Request, res: Response) => {
   try {
     if (req.url.startsWith("/callback")) {
       // Handle callback logic
@@ -96,17 +80,8 @@ const handleOAuth = async (req: Request, res: Response) => {
           },
         );
       });
-
-      const unifiedCards = await fetchAndProcessTrelloData({
-        BOARD_ID: boardId,
-        API_KEY: key,
-        API_TOKEN: accessToken,
-      });
-      res.json(unifiedCards);
-
-      // Save the updated oauth_secrets to the file
-      oauth_secrets["token"] = accessToken;
-      //saveOAuthSecrets(oauth_secrets);
+      // return the token 
+      return accessToken;
     } else {
       // Handle login logic
       const requestToken = await new Promise<string>((resolve, reject) => {
@@ -118,7 +93,6 @@ const handleOAuth = async (req: Request, res: Response) => {
               return;
             }
             // Store the token secret
-            oauth_secrets[token] = tokenSecret;
             resolve(token as string);
           },
         );
@@ -134,7 +108,4 @@ const handleOAuth = async (req: Request, res: Response) => {
   }
 };
 
-app.get("*", (request: Request, response: Response) => {
-  console.log(`GET '${request.originalUrl}' ${Date()}`);
-  handleOAuth(request, response);
-});
+

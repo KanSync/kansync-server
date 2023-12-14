@@ -2,10 +2,12 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
-import { List, Card, Member } from "./trelloTypes";
-import { StringIterator } from "lodash";
 
-export default async (req: Request, res: Response) => {
+import { List, Card, Member } from "./trelloTypes";
+import { handleIssueRequest } from "../common";
+import { handleOAuth } from "./oauth";
+
+async function handler(req: Request, res: Response) {
   const boardId = req.query.boardId as string;
   const apiKey = req.query.apiKey as string;
   const apiToken = req.query.apiToken as string;
@@ -19,12 +21,14 @@ export default async (req: Request, res: Response) => {
 
   try {
     const boardData = await getBoardData(boardId, apiKey, apiToken);
-    res.status(200).send(boardData);
+    let issues = convertTrelloDataToUnifiedIssues(boardData.lists);
+    res.status(200).send({ num: boardData.totalCardCount, issues: issues });
+    return issues;
   } catch (error) {
     console.error("Error fetching board data:", error);
     res.status(500).send(`Internal Server Error: ${error.message}`);
   }
-};
+}
 
 export async function getBoardData(
   boardId: string,
@@ -122,23 +126,6 @@ async function getMembersData(
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
 }
 
-export async function fetchAndProcessTrelloData({
-  BOARD_ID,
-  API_KEY,
-  API_TOKEN,
-}: {
-  BOARD_ID: string;
-  API_KEY: string;
-  API_TOKEN: string;
-}): Promise<string | object> {
-  try {
-    const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
-    const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
-
-    return unifiedIssues;
-  } catch (error) {
-    console.error("Error:", error);
-
-    return {};
-  }
-}
+export default async (req: Request, res: Response) => {
+  await handleIssueRequest(req, res, handler);
+};

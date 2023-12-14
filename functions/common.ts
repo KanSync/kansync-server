@@ -13,7 +13,7 @@ export interface Assignee {
 }
 
 export interface IUnifiedIssue extends Issues {
-  projectID: string;
+  projectID: number | string;
   dependencies?: IUnifiedIssue[];
 }
 
@@ -63,7 +63,7 @@ export async function handleIssueRequest(
         await storeIssuesToDB(user, project_name, issues);
       } catch (error) {
         // If the store fails ignore it as getIssuesFromBoard already consumes the response
-        console.log(error)
+        console.log(error);
       }
     }
     return;
