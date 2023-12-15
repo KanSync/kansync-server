@@ -37,6 +37,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.9.0
     version: 20.10.4
+  '@types/oauth':
+    specifier: ^0.9.4
+    version: 0.9.4
   prisma:
     specifier: ^5.7.0
     version: 5.7.0
@@ -390,6 +393,12 @@ packages:
     resolution: {integrity: sha512-D08YG6rr8X90YB56tSIuBaddy/UXAA9RKJoFvrsnogAum/0pmjkgi4+2nx96A330FmioegBWmEYQ+syqCFaveg==}
     dependencies:
       undici-types: 5.26.5
+
+  /@types/oauth@0.9.4:
+    resolution: {integrity: sha512-qk9orhti499fq5XxKCCEbd0OzdPZuancneyse3KtR+vgMiHRbh+mn8M4G6t64ob/Fg+GZGpa565MF/2dKWY32A==}
+    dependencies:
+      '@types/node': 20.10.4
+    dev: true
 
   /@types/qs@6.9.10:
     resolution: {integrity: sha512-3Gnx08Ns1sEoCrWssEgTSJs/rsT2vhGP+Ja9cnnk9k4ALxinORlQneLXFeFKOTJMOeZUFD1s7w+w2AphTpvzZw==}

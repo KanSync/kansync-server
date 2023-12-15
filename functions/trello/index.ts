@@ -2,15 +2,30 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
-
+require("dotenv").config();
 import { List, Card, Member } from "./trelloTypes";
 import { handleIssueRequest } from "../common";
-import { handleOAuth } from "./oauth";
+import fs from "fs";
+
+// Function to load oauth_secrets from a file
+const loadOAuthSecrets = (): Record<string, string> => {
+  try {
+    const data = fs.readFileSync("oauth_secrets.json");
+    return JSON.parse(data.toString());
+  } catch (error) {
+    return {};
+  }
+};
 
 async function handler(req: Request, res: Response) {
-  const boardId = req.query.boardId as string;
-  const apiKey = req.query.apiKey as string;
-  const apiToken = req.query.apiToken as string;
+  let boardId = req.query.boardId;
+  const apiKey = process.env.TRELLO_KEY;
+  
+  let key_secrets = loadOAuthSecrets();
+  const apiToken = key_secrets.accessToken;
+
+  console.log(apiToken);
+  boardId = boardId as string;
 
   if (!boardId || !apiKey || !apiToken) {
     res
@@ -30,7 +45,7 @@ async function handler(req: Request, res: Response) {
   }
 }
 
-export async function getBoardData(
+async function getBoardData(
   boardId: string,
   apiKey: string,
   apiToken: string,
