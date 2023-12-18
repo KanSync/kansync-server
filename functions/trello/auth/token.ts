@@ -14,7 +14,7 @@ const accessURL = "https://trello.com/1/OAuthGetAccessToken";
  */
 const key = process.env.TRELLO_KEY;
 const secret = process.env.TRELLO_OAUTH_SECRET;
-const loginCallback = process.env.TRELLO_CALLBACK_URL;
+const loginCallback = process.env.REDIRECT_URI;
 
 const oauth = new OAuth.OAuth(
   requestURL,

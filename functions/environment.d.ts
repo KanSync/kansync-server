@@ -8,14 +8,13 @@ declare global {
       DATABASE_URL: string;
       TRELLO_OAUTH_SECRET: string;
       TRELLO_KEY: string;
-      TRELLO_CALLBACK_URL: string;
       JIRA_CLIENT_SECRET: string;
       GITHUB_CLIENT_SECRET: string;
-        }
     }
   }
+}
 
 
 // If this file has no import/export statements (i.e. is a script)
 // convert it into a module by adding an empty export statement.
-export {};
+export { };
