@@ -2,6 +2,7 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { OAuth2Client } from "@badgateway/oauth2-client";
 import { auth } from "../../oauth";
+import { allowCors } from "../../_utils/helpers";
 
 
 const client = new OAuth2Client({
@@ -14,6 +15,6 @@ const client = new OAuth2Client({
 });
 
 
-export default async (req: Request, res: Response) => {
-  await auth(req, res, client, false)
-}
+export default allowCors(async (req: Request, res: Response) => {
+  await auth(req, res, client)
+})
