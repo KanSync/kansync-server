@@ -10,7 +10,7 @@ import { IGithubIssue } from "./interfaces";
 export function toUnified(issue: IGithubIssue): IUnifiedIssue {
   let unifiedIssue: IUnifiedIssue = {
     title: issue.content.title,
-    assignees: issue.content.assignees.nodes.map(assignee => { return { name: assignee.login } as Assignee }),
+    assignees: issue.content.assignees ? issue.content.assignees.nodes.map(assignee => { return JSON.stringify({ name: assignee.login }) }) : [],
     author: { name: issue.content.author.login },
     body: issue.content.body,
     category: issue.status.column,
@@ -18,7 +18,7 @@ export function toUnified(issue: IGithubIssue): IUnifiedIssue {
     createdAt: new Date(issue.content.createdAt),
     comments: issue.content.comments.nodes.map(comment => comment.body),
     lastEditedAt: issue.content.lastEditedAt ? new Date(issue.content.lastEditedAt) : null,
-    projectID: issue.project.id, // TODO: Make sure this id is unique
+    projectID: 0,
     dueDate: issue.content.milestone && issue.content.milestone.dueOn ? new Date(issue.content.milestone.dueOn) : null,
     labels: issue.content.labels.nodes.map(label => label.name),
   }
