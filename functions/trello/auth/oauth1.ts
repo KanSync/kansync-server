@@ -40,24 +40,26 @@ const oauth = new OAuth.OAuth(
 
 async function login(req: Request, res: Response) {
   try {
-    const tokens = await new Promise<{ token: string, tokenSecret: string }>((resolve, reject) => {
-      oauth.getOAuthRequestToken(
-        (error: any, token: string | number, tokenSecret: string) => {
-          if (error) {
-            console.error("Error getting OAuth request token:", error);
-            reject("Error getting OAuth request token");
-            return;
-          }
-          resolve({ token: token as string, tokenSecret: tokenSecret });
-        },
-      );
-    });
+    const tokens = await new Promise<{ token: string; tokenSecret: string }>(
+      (resolve, reject) => {
+        oauth.getOAuthRequestToken(
+          (error: any, token: string | number, tokenSecret: string) => {
+            if (error) {
+              console.error("Error getting OAuth request token:", error);
+              reject("Error getting OAuth request token");
+              return;
+            }
+            resolve({ token: token as string, tokenSecret: tokenSecret });
+          },
+        );
+      },
+    );
     // Redirect user to Trello for authorization
-    res.status(200).send(tokens)
+    res.status(200).send(tokens);
   } catch (error) {
     console.error("Error in login:", error);
     res.status(500).send("Internal Server Error");
   }
 }
 
-export default allowCors(login)
+export default allowCors(login);

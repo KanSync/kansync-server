@@ -2,21 +2,10 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
-require("dotenv").config();
+import "dotenv/config";
 import { List, Card, Member } from "./trelloTypes";
 import { handleIssueRequest } from "../common";
-import fs from "fs";
 import { allowCors } from "../_utils/helpers";
-
-// Function to load oauth_secrets from a file
-const loadOAuthSecrets = (): Record<string, string> => {
-  try {
-    const data = fs.readFileSync("oauth_secrets.json");
-    return JSON.parse(data.toString());
-  } catch (error) {
-    return {};
-  }
-};
 
 async function handler(req: Request, res: Response) {
   let reqAuthHeader = req.headers.authorization;
@@ -41,9 +30,7 @@ async function handler(req: Request, res: Response) {
   }
 
   if (!apiKey || !apiToken) {
-    res
-      .status(500)
-      .send(`Internal server error, missing things.`);
+    res.status(500).send(`Internal server error, missing things.`);
     return;
   }
 
