@@ -6,6 +6,7 @@ require("dotenv").config();
 import { List, Card, Member } from "./trelloTypes";
 import { handleIssueRequest } from "../common";
 import fs from "fs";
+import { allowCors } from "../_utils/helpers";
 
 // Function to load oauth_secrets from a file
 const loadOAuthSecrets = (): Record<string, string> => {
@@ -18,19 +19,31 @@ const loadOAuthSecrets = (): Record<string, string> => {
 };
 
 async function handler(req: Request, res: Response) {
+  let reqAuthHeader = req.headers.authorization;
+
+  if (reqAuthHeader === undefined) {
+    res.status(403).send(`Missing authorization header.`);
+    return;
+  }
+
+  let [_tokenType, apiToken] = reqAuthHeader.split(" ");
+
   let boardId = req.query.boardId;
+
   const apiKey = process.env.TRELLO_KEY;
-  
-  let key_secrets = loadOAuthSecrets();
-  const apiToken = key_secrets.accessToken;
 
   console.log(apiToken);
   boardId = boardId as string;
 
-  if (!boardId || !apiKey || !apiToken) {
+  if (!boardId) {
+    res.status(400).send(`Missing required parameters: boardId.`);
+    return;
+  }
+
+  if (!apiKey || !apiToken) {
     res
-      .status(400)
-      .send(`Missing required parameters: boardId, apiKey, or apiToken.`);
+      .status(500)
+      .send(`Internal server error, missing things.`);
     return;
   }
 
@@ -141,6 +154,6 @@ async function getMembersData(
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
 }
 
-export default async (req: Request, res: Response) => {
+export default allowCors(async (req: Request, res: Response) => {
   await handleIssueRequest(req, res, handler);
-};
+});

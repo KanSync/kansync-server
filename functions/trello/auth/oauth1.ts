@@ -1,17 +1,14 @@
+import "dotenv/config";
+
 import { Request, Response } from "express";
 import OAuth from "oauth";
-import fs from "fs";
-import "dotenv/config";
+import { allowCors } from "../../_utils/helpers";
 
 /**
  * Configuration for OAuth request, access, and authorization URLs.
  */
 const requestURL = "https://trello.com/1/OAuthGetRequestToken";
 const accessURL = "https://trello.com/1/OAuthGetAccessToken";
-const authorizeURL = "https://trello.com/1/OAuthAuthorizeToken";
-const appName = "KanSync";
-const scope = "read,write,account";
-const expiration = "never";
 
 /**n
  * Trello API key and secret. Replace with actual key and secret for production.
@@ -19,16 +16,6 @@ const expiration = "never";
 const key = process.env.TRELLO_KEY;
 const secret = process.env.TRELLO_OAUTH_SECRET;
 const loginCallback = process.env.TRELLO_CALLBACK_URL;
-
-/**
- * Loads or initializes OAuth secrets.
- */
-// Function to save oauth_secrets to a file
-const saveOAuthSecrets = (secrets: Record<string, string>) => {
-  fs.writeFileSync("oauth_secrets.json", JSON.stringify(secrets, null, 2));
-};
-
-const oauth_secrets: Record<string, string> = {};
 
 /**
  * Initializes the OAuth object using the OAuth library.
@@ -51,9 +38,9 @@ const oauth = new OAuth.OAuth(
  * @param {Response} res - The response object.
  */
 
-export default async function login(req: Request, res: Response) {
+async function login(req: Request, res: Response) {
   try {
-    const requestToken = await new Promise<string>((resolve, reject) => {
+    const tokens = await new Promise<{ token: string, tokenSecret: string }>((resolve, reject) => {
       oauth.getOAuthRequestToken(
         (error: any, token: string | number, tokenSecret: string) => {
           if (error) {
@@ -61,18 +48,16 @@ export default async function login(req: Request, res: Response) {
             reject("Error getting OAuth request token");
             return;
           }
-          oauth_secrets["token_s"] = tokenSecret;
-          saveOAuthSecrets(oauth_secrets);
-          resolve(token as string);
+          resolve({ token: token as string, tokenSecret: tokenSecret });
         },
       );
     });
     // Redirect user to Trello for authorization
-    res.redirect(
-      `${authorizeURL}?oauth_token=${requestToken}&name=${appName}&scope=${scope}&expiration=${expiration}`,
-    );
+    res.status(200).send(tokens)
   } catch (error) {
     console.error("Error in login:", error);
     res.status(500).send("Internal Server Error");
   }
 }
+
+export default allowCors(login)
