@@ -2,7 +2,6 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       PERSONAL_ACCESS_TOKEN: string;
-      CLIENT_SECRET: string;
       REDIRECT_URI: string;
       SERVER_URL: string;
       DATABASE_URL: string;
