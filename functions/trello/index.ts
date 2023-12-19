@@ -3,7 +3,7 @@ import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
 import "dotenv/config";
-import { List, Card, Member } from "./trelloTypes";
+import { List, Member } from "./trelloTypes";
 import { handleIssueRequest } from "../common";
 import { allowCors } from "../_utils/helpers";
 

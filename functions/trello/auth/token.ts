@@ -1,6 +1,7 @@
+import "dotenv/config";
+
 import OAuth from "oauth";
 import { Request, Response } from "express";
-import "dotenv/config";
 import { OAuth2Token } from '@badgateway/oauth2-client';
 import { allowCors } from "../../_utils/helpers";
 
