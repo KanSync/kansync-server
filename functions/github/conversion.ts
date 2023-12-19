@@ -18,7 +18,6 @@ export function toUnified(issue: IGithubIssue): IUnifiedIssue {
     createdAt: new Date(issue.content.createdAt),
     comments: issue.content.comments.nodes.map(comment => comment.body),
     lastEditedAt: issue.content.lastEditedAt ? new Date(issue.content.lastEditedAt) : null,
-    projectID: 0,
     dueDate: issue.content.milestone && issue.content.milestone.dueOn ? new Date(issue.content.milestone.dueOn) : null,
     labels: issue.content.labels.nodes.map(label => label.name),
   }

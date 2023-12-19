@@ -22,10 +22,8 @@ export function convertTrelloDataToUnifiedIssues(
         createdAt: new Date(card.createdDate),
         comments: [],
         lastEditedAt: new Date(card.dateLastActivity),
-        projectID: card.projectID,
-        dueDate: new Date(card.due) || null,
+        dueDate: card.due ? new Date(card.due) : null,
         labels: card.labels.map(label => label.name),
-        dependencies: [],
       };
       unifiedIssues.push(unifiedIssue);
     });

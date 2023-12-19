@@ -2,34 +2,50 @@ import { callAPI } from "./callAPI";
 import { API_OPS } from "./APIOperations";
 import { Request, Response } from "express";
 import { convertTrelloDataToUnifiedIssues } from "./conversion";
-
-import { List, Card, Member } from "./trelloTypes";
+import "dotenv/config";
+import { List, Member } from "./trelloTypes";
 import { handleIssueRequest } from "../common";
+import { allowCors } from "../_utils/helpers";
 
 async function handler(req: Request, res: Response) {
-  const boardId = req.query.boardId as string;
-  const apiKey = req.query.apiKey as string;
-  const apiToken = req.query.apiToken as string;
+  let reqAuthHeader = req.headers.authorization;
 
-  if (!boardId || !apiKey || !apiToken) {
-    res
-      .status(400)
-      .send(`Missing required parameters: boardId, apiKey, or apiToken.`);
+  if (reqAuthHeader === undefined) {
+    res.status(403).send(`Missing authorization header.`);
+    return;
+  }
+
+  let [_tokenType, apiToken] = reqAuthHeader.split(" ");
+
+  let boardId = req.query.boardId;
+
+  const apiKey = process.env.TRELLO_KEY;
+
+  console.log(apiToken);
+  boardId = boardId as string;
+
+  if (!boardId) {
+    res.status(400).send(`Missing required parameters: boardId.`);
+    return;
+  }
+
+  if (!apiKey || !apiToken) {
+    res.status(500).send(`Internal server error, missing things.`);
     return;
   }
 
   try {
     const boardData = await getBoardData(boardId, apiKey, apiToken);
-    let issues = convertTrelloDataToUnifiedIssues(boardData.lists)
-    res.status(200).send({ "num": boardData.totalCardCount, "issues": issues });
-    return issues
+    let issues = convertTrelloDataToUnifiedIssues(boardData.lists);
+    res.status(200).send({ num: boardData.totalCardCount, issues: issues });
+    return issues;
   } catch (error) {
     console.error("Error fetching board data:", error);
     res.status(500).send(`Internal Server Error: ${error.message}`);
   }
-};
+}
 
-export async function getBoardData(
+async function getBoardData(
   boardId: string,
   apiKey: string,
   apiToken: string,
@@ -125,19 +141,6 @@ async function getMembersData(
   return await callAPI(API_OPS.getMembersData(username), apiKey, apiToken);
 }
 
-// async function fetchAndProcessTrelloData() {
-//   try {
-//     const trelloData = await getBoardData(BOARD_ID, API_KEY, API_TOKEN);
-//     const unifiedIssues = convertTrelloDataToUnifiedIssues(trelloData.lists);
-//     console.log("Unified Issues:", JSON.stringify(unifiedIssues, null, 2));
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// }
-// 
-// fetchAndProcessTrelloData();
-
-
-export default async (req: Request, res: Response) => {
+export default allowCors(async (req: Request, res: Response) => {
   await handleIssueRequest(req, res, handler);
-}
+});

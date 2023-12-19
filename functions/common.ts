@@ -9,9 +9,10 @@ import type { Issues } from "../.prisma/client";
 
 export interface Assignee {
   name: string;
+  [key: string]: any;
 }
 
-export interface IUnifiedIssue extends Omit<Issues, 'id'> {
+export interface IUnifiedIssue extends Omit<Issues, 'id' | 'projectID'> {
   dependencies?: IUnifiedIssue[];
 }
 
@@ -61,7 +62,7 @@ export async function handleIssueRequest(
         await storeIssuesToDB(user, project_name, issues);
       } catch (error) {
         // If the store fails ignore it as getIssuesFromBoard already consumes the response
-        console.log(error)
+        console.log(error);
       }
     }
     return;

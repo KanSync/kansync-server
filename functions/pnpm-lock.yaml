@@ -20,6 +20,9 @@ dependencies:
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
+  oauth:
+    specifier: ^0.10.0
+    version: 0.10.0
   octokit:
     specifier: ^3.1.1
     version: 3.1.1
@@ -34,6 +37,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.9.0
     version: 20.10.4
+  '@types/oauth':
+    specifier: ^0.9.4
+    version: 0.9.4
   prisma:
     specifier: ^5.7.0
     version: 5.7.0
@@ -387,6 +393,12 @@ packages:
     resolution: {integrity: sha512-D08YG6rr8X90YB56tSIuBaddy/UXAA9RKJoFvrsnogAum/0pmjkgi4+2nx96A330FmioegBWmEYQ+syqCFaveg==}
     dependencies:
       undici-types: 5.26.5
+
+  /@types/oauth@0.9.4:
+    resolution: {integrity: sha512-qk9orhti499fq5XxKCCEbd0OzdPZuancneyse3KtR+vgMiHRbh+mn8M4G6t64ob/Fg+GZGpa565MF/2dKWY32A==}
+    dependencies:
+      '@types/node': 20.10.4
+    dev: true
 
   /@types/qs@6.9.10:
     resolution: {integrity: sha512-3Gnx08Ns1sEoCrWssEgTSJs/rsT2vhGP+Ja9cnnk9k4ALxinORlQneLXFeFKOTJMOeZUFD1s7w+w2AphTpvzZw==}
@@ -758,6 +770,10 @@ packages:
 
   /oauth-sign@0.9.0:
     resolution: {integrity: sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==}
+    dev: false
+
+  /oauth@0.10.0:
+    resolution: {integrity: sha512-1orQ9MT1vHFGQxhuy7E/0gECD3fd2fCC+PIX+/jgmU/gI3EpRocXtmtvxCO5x3WZ443FLTLFWNDjl5MPJf9u+Q==}
     dev: false
 
   /octokit@3.1.1:
