@@ -6,7 +6,7 @@ import { basicDomainURL, callAPI, getCloudID, oAuthDomainURL } from "./callAPI";
 import { IUnifiedIssue, handleIssueRequest } from "../common";
 import { allowCors } from "../_utils/helpers";
 
-class ResponseError extends Error {
+export class ResponseError extends Error {
   constructor(public status: number, m: string) {
     super(m);
   }
@@ -78,6 +78,7 @@ async function handler(
       domainName,
     );
   } catch (error) {
+    console.log(error)
     res.status(error.status).send(error.message);
     return;
   }

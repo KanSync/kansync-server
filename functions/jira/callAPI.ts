@@ -1,3 +1,4 @@
+import { ResponseError } from ".";
 import { API_OPS, Operations } from "./APIOperations";
 import { HEADERS } from "./header";
 
@@ -28,8 +29,8 @@ export function callAPI(
 ): Promise<
   | { data: any }
   | {
-      response: any;
-    }
+    response: any;
+  }
 > {
   let url = domain + operation.endpoint;
 
@@ -40,7 +41,7 @@ export function callAPI(
   })
     .then((response) => {
       if (!response.ok) {
-        throw response;
+        throw new ResponseError(400, "Error occurred while getting data from Jira");
       }
       return response.json();
     })
@@ -82,5 +83,5 @@ export async function getCloudID(
   let url = basicDomainURL(domainName);
   let result = searchResult.find((resource) => resource.url === url);
 
-  return result.id;
+  return result ? result.id : undefined;
 }
