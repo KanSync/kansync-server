@@ -53,7 +53,7 @@ export async function handleIssueRequest(
     res.status(500).send("Failed to validate user.");
   }
 
-  if (update || !projectExists(user, project_name)) {
+  if (update || !(await projectExists(user, project_name))) {
     let issues = await getIssuesFromBoard(req, res);
 
     // If issues is undefined getIssuesFromBoard should have sent an error response
