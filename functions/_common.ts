@@ -4,7 +4,7 @@ import {
   projectExists,
   storeIssuesToDB,
   userExists,
-} from "./database";
+} from "./_database";
 import type { Issues } from "../.prisma/client";
 
 export interface Assignee {
