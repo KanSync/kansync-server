@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 async function handler(req: Request, res: Response) {
   let login = req.body.login;
-  console.log(req.body)
+  console.log(req.body);
 
   if (login === undefined) {
     res.status(400).send(`Missing user details.`);
@@ -20,6 +20,7 @@ async function handler(req: Request, res: Response) {
     await createUser(login);
   } catch (error) {
     res.status(500).send("Database error occurred during user creation.");
+    return;
   }
   res.status(201).send("User created.");
 }
