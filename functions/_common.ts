@@ -36,7 +36,7 @@ export async function handleIssueRequest(
   let update = req.query.update;
 
   // If user or project name is undefined => can't get data from db
-  if (true) {//(user === undefined || project_name === undefined) {
+  if (user === undefined || project_name === undefined) {
     await getIssuesFromBoard(req, res);
     return;
   }
