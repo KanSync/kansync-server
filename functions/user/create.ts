@@ -19,7 +19,7 @@ async function handler(req: Request, res: Response) {
 
     await createUser(login);
   } catch (error) {
-    res.status(500).send("Database error occurred during user creation.");
+    res.status(500).send(`Database error occurred during user creation. ${error}`);
     return;
   }
   res.status(201).send("User created.");
