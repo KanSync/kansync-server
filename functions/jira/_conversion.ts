@@ -1,4 +1,4 @@
-import { Assignee, IUnifiedIssue } from "../common";
+import { Assignee, IUnifiedIssue } from "../_common";
 
 /**
  * Convert Jira issue to unified format

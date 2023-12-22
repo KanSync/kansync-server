@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Request, Response } from "express";
 import { OAuth2Client } from "@badgateway/oauth2-client";
-import { auth } from "../../oauth";
+import { auth } from "../../_oauth";
 import { allowCors } from "../../_utils/helpers";
 
 

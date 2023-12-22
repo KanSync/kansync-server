@@ -1,6 +1,6 @@
 import { ResponseError } from ".";
-import { API_OPS, Operations } from "./APIOperations";
-import { HEADERS } from "./header";
+import { API_OPS, Operations } from "./_APIOperations";
+import { HEADERS } from "./_header";
 
 const baseOAuthURL = "https://api.atlassian.com";
 

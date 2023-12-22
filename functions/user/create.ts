@@ -1,4 +1,4 @@
-import { createUser, userExists } from "../database";
+import { createUser, userExists } from "../_database";
 import { Request, Response } from "express";
 
 async function handler(req: Request, res: Response) {

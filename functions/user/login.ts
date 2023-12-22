@@ -1,5 +1,5 @@
 import { allowCors } from "../_utils/helpers";
-import { userExists } from "../database";
+import { userExists } from "../_database";
 import { Request, Response } from "express";
 
 async function handler(req: Request, res: Response) {

@@ -1,10 +1,10 @@
-import { callAPI } from "./callAPI";
-import { API_OPS } from "./APIOperations";
+import { callAPI } from "./_callAPI";
+import { API_OPS } from "./_APIOperations";
 import { Request, Response } from "express";
-import { convertTrelloDataToUnifiedIssues } from "./conversion";
+import { convertTrelloDataToUnifiedIssues } from "./_conversion";
 import "dotenv/config";
-import { List, Member } from "./trelloTypes";
-import { handleIssueRequest } from "../common";
+import { List, Member } from "./_trelloTypes";
+import { handleIssueRequest } from "../_common";
 import { allowCors } from "../_utils/helpers";
 
 async function handler(req: Request, res: Response) {

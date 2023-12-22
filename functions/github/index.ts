@@ -2,10 +2,10 @@ import "dotenv/config";
 
 import { Request, Response } from "express";
 import { allowCors } from "../_utils/helpers";
-import { GET_PROJECT_CARDS } from "./schema/getProjectCards";
-import { toUnified } from "./conversion";
-import { IGithubIssue } from "./interfaces";
-import { IUnifiedIssue, handleIssueRequest } from "../common";
+import { GET_PROJECT_CARDS } from "./_schema/getProjectCards";
+import { toUnified } from "./_conversion";
+import { IGithubIssue } from "./_interfaces";
+import { IUnifiedIssue, handleIssueRequest } from "../_common";
 
 const handler = async (req: Request, res: Response) => {
   let reqAuthHeader = req.headers.authorization;

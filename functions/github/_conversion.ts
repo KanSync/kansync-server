@@ -1,5 +1,5 @@
-import { Assignee, IUnifiedIssue } from '../common';
-import { IGithubIssue } from "./interfaces";
+import { Assignee, IUnifiedIssue } from '../_common';
+import { IGithubIssue } from "./_interfaces";
 
 /**
  * Convert GitHub issue to unified format

@@ -1,4 +1,4 @@
-import { Operations } from "./APIOperations";
+import { Operations } from "./_APIOperations";
 import rp from "request-promise";
 
 export function callAPI(

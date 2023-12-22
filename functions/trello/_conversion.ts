@@ -1,6 +1,6 @@
-import { IUnifiedIssue, Assignee } from "../common";
+import { IUnifiedIssue, Assignee } from "../_common";
 
-import { List } from "./trelloTypes";
+import { List } from "./_trelloTypes";
 
 export function convertTrelloDataToUnifiedIssues(
   lists: List[],

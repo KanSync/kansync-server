@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 import { PrismaClient } from '../.prisma/client';
-import { IUnifiedIssue } from './common';
+import { IUnifiedIssue } from './_common';
 
 class DatabaseError extends Error {
     constructor(public status: Number, msg: string) {

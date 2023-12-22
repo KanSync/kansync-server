@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { API_OPS } from "./APIOperations";
-import { HEADERS } from "./header";
-import { toUnified } from "./conversion";
-import { basicDomainURL, callAPI, getCloudID, oAuthDomainURL } from "./callAPI";
-import { IUnifiedIssue, handleIssueRequest } from "../common";
+import { API_OPS } from "./_APIOperations";
+import { HEADERS } from "./_header";
+import { toUnified } from "./_conversion";
+import { basicDomainURL, callAPI, getCloudID, oAuthDomainURL } from "./_callAPI";
+import { IUnifiedIssue, handleIssueRequest } from "../_common";
 import { allowCors } from "../_utils/helpers";
 
 export class ResponseError extends Error {
