@@ -17,8 +17,8 @@ tmp
 .nhost
 
 # Database
-.prisma
-migrations
+# .prisma
+# migrations
 
 # Coverage reports
 coverage
