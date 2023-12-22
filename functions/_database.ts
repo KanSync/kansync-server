@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 import { PrismaClient } from '../.prisma/client';
-import x from '../.prisma/client/libquery_engine-linux-arm64-openssl-1.0.x.so.node'
 import { IUnifiedIssue } from './_common';
 
 class DatabaseError extends Error {

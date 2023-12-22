@@ -4,7 +4,7 @@ import {
   projectExists,
   storeIssuesToDB,
   userExists,
-} from "./_database";
+} from "./database";
 import type { Issues } from "../.prisma/client";
 
 export interface Assignee {
@@ -36,7 +36,7 @@ export async function handleIssueRequest(
   let update = req.query.update;
 
   // If user or project name is undefined => can't get data from db
-  if (user === undefined || project_name === undefined) {
+  if (true) {//(user === undefined || project_name === undefined) {
     await getIssuesFromBoard(req, res);
     return;
   }
