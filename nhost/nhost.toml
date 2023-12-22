@@ -1,4 +1,31 @@
 [global]
+[[global.environment]]
+name = 'REDIRECT_URI'
+value = 'https://kansync.netlify.app/callback'
+
+[[global.environment]]
+name = 'TRELLO_KEY'
+value = '7a01e3836a98699497cc8a0cfada5edc'
+
+[[global.environment]]
+name = 'SERVER_URL'
+value = 'https://tvljscyfpqzgdtpcqpvt.functions.eu-central-1.nhost.run/v1'
+
+[[global.environment]]
+name = 'DATABASE_URL'
+value = '{{ secrets.DATABASE_URL }}'
+
+[[global.environment]]
+name = 'GITHUB_CLIENT_SECRET'
+value = '{{ secrets.GITHUB_CLIENT_SECRET }}'
+
+[[global.environment]]
+name = 'TRELLO_OAUTH_SECRET'
+value = '{{ secrets.TRELLO_OAUTH_SECRET }}'
+
+[[global.environment]]
+name = 'JIRA_CLIENT_SECRET'
+value = '{{ secrets.JIRA_CLIENT_SECRET }}'
 
 [hasura]
 version = 'v2.33.4-ce'
