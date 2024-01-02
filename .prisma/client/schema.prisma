@@ -6,7 +6,8 @@ datasource db {
 generator client {
   provider      = "prisma-client-js"
   output        = "../.prisma/client"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-arm64-openssl-1.1.x"] 
+  engineType = "binary"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-arm64-openssl-1.0.x"] 
 }
 
 model KanSyncUsers {
