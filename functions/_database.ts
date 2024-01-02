@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { PrismaClient } from '../.prisma/client';
+import { PrismaClient } from './_prisma/client';
 import { IUnifiedIssue } from './_common';
 
 class DatabaseError extends Error {
