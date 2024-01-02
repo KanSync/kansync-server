@@ -22,7 +22,7 @@ const {
   defineDmmfProperty,
   Public,
   detectRuntime,
-} = require('./runtime/binary')
+} = require('./runtime/library')
 
 
 const Prisma = {}
@@ -31,11 +31,11 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 5.7.0
+ * Prisma Client JS version: 5.7.1
  * Query Engine version: 79fb5193cf0a8fdbef536e4b4a159cad677ab1b9
  */
 Prisma.prismaVersion = {
-  client: "5.7.0",
+  client: "5.7.1",
   engine: "79fb5193cf0a8fdbef536e4b4a159cad677ab1b9"
 }
 
@@ -161,7 +161,7 @@ const config = {
       "fromEnvVar": null
     },
     "config": {
-      "engineType": "binary"
+      "engineType": "library"
     },
     "binaryTargets": [
       {
@@ -186,7 +186,7 @@ const config = {
     "schemaEnvPath": "../../functions/.env"
   },
   "relativePath": "../../functions",
-  "clientVersion": "5.7.0",
+  "clientVersion": "5.7.1",
   "engineVersion": "79fb5193cf0a8fdbef536e4b4a159cad677ab1b9",
   "datasourceNames": [
     "db"
@@ -201,8 +201,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "ZGF0YXNvdXJjZSBkYiB7DQogIHVybCAgICAgID0gZW52KCJEQVRBQkFTRV9VUkwiKQ0KICBwcm92aWRlciA9ICJwb3N0Z3Jlc3FsIg0KfQ0KDQpnZW5lcmF0b3IgY2xpZW50IHsNCiAgcHJvdmlkZXIgICAgICA9ICJwcmlzbWEtY2xpZW50LWpzIg0KICBvdXRwdXQgICAgICAgID0gIi4uLy5wcmlzbWEvY2xpZW50Ig0KICBlbmdpbmVUeXBlID0gImJpbmFyeSINCiAgYmluYXJ5VGFyZ2V0cyA9IFsibmF0aXZlIiwgImxpbnV4LW11c2wtb3BlbnNzbC0zLjAueCIsICJsaW51eC1hcm02NC1vcGVuc3NsLTEuMC54Il0gDQp9DQoNCm1vZGVsIEthblN5bmNVc2VycyB7DQogIGxvZ2luICAgIFN0cmluZyAgICAgQGlkDQogIFByb2plY3RzIFByb2plY3RzW10NCn0NCg0KbW9kZWwgUHJvamVjdHMgew0KICBpZCAgICAgICAgSW50ICAgICAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpDQogIG5hbWUgICAgICBTdHJpbmcNCiAgdXNlciAgICAgIEthblN5bmNVc2VycyBAcmVsYXRpb24oZmllbGRzOiBbdXNlcl9uYW1lXSwgcmVmZXJlbmNlczogW2xvZ2luXSwgb25VcGRhdGU6IENhc2NhZGUsIG9uRGVsZXRlOiBDYXNjYWRlKQ0KICB1c2VyX25hbWUgU3RyaW5nDQogIElzc3VlcyAgICBJc3N1ZXNbXQ0KDQogIEBAdW5pcXVlKFt1c2VyX25hbWUsIG5hbWVdKQ0KfQ0KDQptb2RlbCBJc3N1ZXMgew0KICBpZCAgICAgICAgICAgICAgIEludCAgICAgICBAaWQgQGRlZmF1bHQoYXV0b2luY3JlbWVudCgpKQ0KICB0aXRsZSAgICAgICAgICAgIFN0cmluZw0KICBhc3NpZ25lZXMgICAgICAgIEpzb24/DQogIGF1dGhvciAgICAgICAgICAgSnNvbj8NCiAgYm9keSAgICAgICAgICAgICBTdHJpbmc/DQogIGNhdGVnb3J5ICAgICAgICAgU3RyaW5nDQogIHN0YXR1c0NoYW5nZVRpbWUgRGF0ZVRpbWU/DQogIGNyZWF0ZWRBdCAgICAgICAgRGF0ZVRpbWUNCiAgY29tbWVudHMgICAgICAgICBTdHJpbmdbXQ0KICBsYXN0RWRpdGVkQXQgICAgIERhdGVUaW1lPw0KICBkdWVEYXRlICAgICAgICAgIERhdGVUaW1lPw0KICBsYWJlbHMgICAgICAgICAgIFN0cmluZ1tdDQogIHByb2plY3QgICAgICAgICAgUHJvamVjdHMgIEByZWxhdGlvbihmaWVsZHM6IFtwcm9qZWN0SURdLCByZWZlcmVuY2VzOiBbaWRdLCBvblVwZGF0ZTogQ2FzY2FkZSwgb25EZWxldGU6IENhc2NhZGUpDQogIHByb2plY3RJRCAgICAgICAgSW50DQp9DQo=",
-  "inlineSchemaHash": "d4fbb4833b459c08b273f57d9199d31cce1ed294ec54bd54317c0b15183aaf8a",
+  "inlineSchema": "ZGF0YXNvdXJjZSBkYiB7DQogIHVybCAgICAgID0gZW52KCJEQVRBQkFTRV9VUkwiKQ0KICBwcm92aWRlciA9ICJwb3N0Z3Jlc3FsIg0KfQ0KDQpnZW5lcmF0b3IgY2xpZW50IHsNCiAgcHJvdmlkZXIgICAgICA9ICJwcmlzbWEtY2xpZW50LWpzIg0KICBvdXRwdXQgICAgICAgID0gIi4uLy5wcmlzbWEvY2xpZW50Ig0KICBiaW5hcnlUYXJnZXRzID0gWyJuYXRpdmUiLCAibGludXgtbXVzbC1vcGVuc3NsLTMuMC54IiwgImxpbnV4LWFybTY0LW9wZW5zc2wtMS4wLngiXSANCn0NCg0KbW9kZWwgS2FuU3luY1VzZXJzIHsNCiAgbG9naW4gICAgU3RyaW5nICAgICBAaWQNCiAgUHJvamVjdHMgUHJvamVjdHNbXQ0KfQ0KDQptb2RlbCBQcm9qZWN0cyB7DQogIGlkICAgICAgICBJbnQgICAgICAgICAgQGlkIEBkZWZhdWx0KGF1dG9pbmNyZW1lbnQoKSkNCiAgbmFtZSAgICAgIFN0cmluZw0KICB1c2VyICAgICAgS2FuU3luY1VzZXJzIEByZWxhdGlvbihmaWVsZHM6IFt1c2VyX25hbWVdLCByZWZlcmVuY2VzOiBbbG9naW5dLCBvblVwZGF0ZTogQ2FzY2FkZSwgb25EZWxldGU6IENhc2NhZGUpDQogIHVzZXJfbmFtZSBTdHJpbmcNCiAgSXNzdWVzICAgIElzc3Vlc1tdDQoNCiAgQEB1bmlxdWUoW3VzZXJfbmFtZSwgbmFtZV0pDQp9DQoNCm1vZGVsIElzc3VlcyB7DQogIGlkICAgICAgICAgICAgICAgSW50ICAgICAgIEBpZCBAZGVmYXVsdChhdXRvaW5jcmVtZW50KCkpDQogIHRpdGxlICAgICAgICAgICAgU3RyaW5nDQogIGFzc2lnbmVlcyAgICAgICAgSnNvbj8NCiAgYXV0aG9yICAgICAgICAgICBKc29uPw0KICBib2R5ICAgICAgICAgICAgIFN0cmluZz8NCiAgY2F0ZWdvcnkgICAgICAgICBTdHJpbmcNCiAgc3RhdHVzQ2hhbmdlVGltZSBEYXRlVGltZT8NCiAgY3JlYXRlZEF0ICAgICAgICBEYXRlVGltZQ0KICBjb21tZW50cyAgICAgICAgIFN0cmluZ1tdDQogIGxhc3RFZGl0ZWRBdCAgICAgRGF0ZVRpbWU/DQogIGR1ZURhdGUgICAgICAgICAgRGF0ZVRpbWU/DQogIGxhYmVscyAgICAgICAgICAgU3RyaW5nW10NCiAgcHJvamVjdCAgICAgICAgICBQcm9qZWN0cyAgQHJlbGF0aW9uKGZpZWxkczogW3Byb2plY3RJRF0sIHJlZmVyZW5jZXM6IFtpZF0sIG9uVXBkYXRlOiBDYXNjYWRlLCBvbkRlbGV0ZTogQ2FzY2FkZSkNCiAgcHJvamVjdElEICAgICAgICBJbnQNCn0NCg==",
+  "inlineSchemaHash": "906dec6fb45387e1dac48781bd5d7be0fec57717df2660f2cc30d8f5988888f5",
   "noEngine": false
 }
 
@@ -228,7 +228,7 @@ defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.getQueryEngineWasmModule = undefined
 
 
-const { warnEnvConflicts } = require('./runtime/binary')
+const { warnEnvConflicts } = require('./runtime/library')
 
 warnEnvConflicts({
     rootEnvPath: config.relativeEnvPaths.rootEnvPath && path.resolve(config.dirname, config.relativeEnvPaths.rootEnvPath),
@@ -240,16 +240,16 @@ exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query-engine-windows");
-path.join(process.cwd(), "../.prisma/client/query-engine-windows")
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "../.prisma/client/query_engine-windows.dll.node")
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query-engine-linux-musl-openssl-3.0.x");
-path.join(process.cwd(), "../.prisma/client/query-engine-linux-musl-openssl-3.0.x")
+path.join(__dirname, "libquery_engine-linux-musl-openssl-3.0.x.so.node");
+path.join(process.cwd(), "../.prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node")
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query-engine-linux-arm64-openssl-1.0.x");
-path.join(process.cwd(), "../.prisma/client/query-engine-linux-arm64-openssl-1.0.x")
+path.join(__dirname, "libquery_engine-linux-arm64-openssl-1.0.x.so.node");
+path.join(process.cwd(), "../.prisma/client/libquery_engine-linux-arm64-openssl-1.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "../.prisma/client/schema.prisma")
