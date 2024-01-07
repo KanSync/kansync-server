@@ -18,7 +18,7 @@ export function convertTrelloDataToUnifiedIssues(
         author: { name: null },
         body: card.desc,
         category: card.category,
-        statusChangeTime: null,
+        statusChangeTime: new Date(card.dateLastActivity),
         createdAt: new Date(card.createdDate),
         comments: [],
         lastEditedAt: new Date(card.dateLastActivity),
